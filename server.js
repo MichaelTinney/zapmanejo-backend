@@ -1,5 +1,5 @@
 // ZapManejo Backend - Complete WhatsApp Livestock Management System
-// Production-ready Node.js + Express + MongoDB backend
+// Production-ready Node.js + Express + MongoDB backend with auto-demo ranch creation
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -14,6 +14,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy for DigitalOcean App Platform
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors({
@@ -26,7 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  trustProxy: true
 });
 app.use('/api/', limiter);
 
@@ -219,6 +223,77 @@ async function sendWhatsAppMessage(phoneNumber, message, accessToken) {
     return response.data;
   } catch (error) {
     console.error('WhatsApp send error:', error.response?.data || error.message);
+    throw error;
+  }
+}
+
+// AUTO-CREATE DEMO RANCH FUNCTION
+async function createDemoRanchIfNeeded() {
+  try {
+    const existingRanch = await Ranch.findOne();
+    if (existingRanch) {
+      return existingRanch;
+    }
+
+    console.log('Creating demo ranch and user...');
+
+    // Create demo user
+    const hashedPassword = await bcrypt.hash('demo123', 10);
+    const demoUser = new User({
+      name: "Demo Rancher",
+      email: "demo@zapmanejo.com",
+      phone: "15619720062",
+      password: hashedPassword,
+      role: "owner"
+    });
+    const savedUser = await demoUser.save();
+
+    // Create demo ranch
+    const demoRanch = new Ranch({
+      name: "Fazenda Demo ZapManejo",
+      owner: savedUser._id,
+      location: { state: "MT", city: "Cuiabá" },
+      pastures: [
+        { name: "Pasto Norte", area: 100, capacity: 200, currentOccupancy: 50 },
+        { name: "Pasto Sul", area: 80, capacity: 150, currentOccupancy: 30 },
+        { name: "Pasto Leste", area: 120, capacity: 250, currentOccupancy: 80 }
+      ],
+      whatsappConfig: {
+        phoneNumber: process.env.WHATSAPP_PHONE_NUMBER_ID,
+        accessToken: process.env.WHATSAPP_ACCESS_TOKEN,
+        webhookVerifyToken: process.env.WHATSAPP_VERIFY_TOKEN,
+        businessAccountId: process.env.WHATSAPP_BUSINESS_ACCOUNT_ID,
+        phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID
+      }
+    });
+    const savedRanch = await demoRanch.save();
+
+    // Update user with ranch reference
+    savedUser.ranch = savedRanch._id;
+    await savedUser.save();
+
+    // Create some demo cattle
+    const demoCattle = [
+      { tag: "DEMO001", breed: "Nelore", gender: "male", currentPasture: { pastureId: "norte", pastureName: "Pasto Norte" } },
+      { tag: "DEMO002", breed: "Angus", gender: "female", currentPasture: { pastureId: "sul", pastureName: "Pasto Sul" } },
+      { tag: "DEMO003", breed: "Brahman", gender: "male", currentPasture: { pastureId: "norte", pastureName: "Pasto Norte" } }
+    ];
+
+    for (const cattleData of demoCattle) {
+      const cattle = new Cattle({
+        ...cattleData,
+        ranch: savedRanch._id,
+        birthDate: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000), // Random date within last year
+        weight: Math.floor(Math.random() * 200) + 300 // Random weight between 300-500kg
+      });
+      await cattle.save();
+    }
+
+    console.log('Demo ranch created successfully with sample cattle');
+    return savedRanch;
+
+  } catch (error) {
+    console.error('Error creating demo ranch:', error);
     throw error;
   }
 }
@@ -544,17 +619,13 @@ app.post('/api/webhook', async (req, res) => {
   }
 });
 
-// WhatsApp message processing function
+// IMPROVED WhatsApp message processing function with auto-demo ranch creation
 async function processWhatsAppMessage(message, phoneNumberId) {
   try {
     console.log('Processing message:', message);
 
-    // For demo purposes, we'll use the first ranch found
-    const ranch = await Ranch.findOne();
-    if (!ranch) {
-      console.error('No ranch found in database');
-      return;
-    }
+    // Auto-create demo ranch if none exists
+    let ranch = await createDemoRanchIfNeeded();
 
     const savedMessage = new Message({
       ranch: ranch._id,
@@ -582,7 +653,7 @@ async function processWhatsAppMessage(message, phoneNumberId) {
         console.log('Confirmation sent:', confirmationMessage);
       }
     } else {
-      const helpMessage = "ZapManejo não entendeu sua mensagem. Tente comandos como:\n• 'Movi 50 gado para pasto norte'\n• 'Vacinei 30 cabeças'\n• 'Nasceram 3 bezerros hoje'\n• 'Custo ração: R$2400'";
+      const helpMessage = "🐄 ZapManejo - Sistema de Gestão de Gado\n\nComandos disponíveis:\n• 'Movi 50 gado para pasto norte'\n• 'Vacinei 30 cabeças'\n• 'Nasceram 3 bezerros hoje'\n• 'Custo ração: R$2400'\n\nDigite sua ação em linguagem natural!";
       const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
       
       if (accessToken) {
@@ -598,15 +669,15 @@ async function processWhatsAppMessage(message, phoneNumberId) {
 function generateConfirmationMessage(processedData) {
   switch (processedData.action) {
     case 'moved_cattle':
-      return `✅ Registrado: ${processedData.cattleCount} cabeças movidas para ${processedData.pasture}`;
+      return `✅ Registrado: ${processedData.cattleCount} cabeças movidas para ${processedData.pasture}\n🐄 ZapManejo - Gestão de Gado Inteligente`;
     case 'vaccination':
-      return `💉 Registrado: Vacinação de ${processedData.cattleCount} cabeças com ${processedData.vaccine}`;
+      return `💉 Registrado: Vacinação de ${processedData.cattleCount} cabeças com ${processedData.vaccine}\n🐄 ZapManejo - Gestão de Gado Inteligente`;
     case 'birth':
-      return `🐄 Registrado: ${processedData.count} nascimento(s) hoje`;
+      return `🐄 Registrado: ${processedData.count} nascimento(s) hoje!\n🎉 ZapManejo - Gestão de Gado Inteligente`;
     case 'feed_cost':
-      return `💰 Registrado: Custo de ração R$${processedData.amount}`;
+      return `💰 Registrado: Custo de ração R$${processedData.amount}\n🐄 ZapManejo - Gestão de Gado Inteligente`;
     default:
-      return `✅ Ação registrada no sistema ZapManejo`;
+      return `✅ Ação registrada no sistema ZapManejo\n🐄 Gestão de Gado Inteligente`;
   }
 }
 
@@ -731,7 +802,7 @@ async function recordBirth(ranchId, count) {
   for (let i = 0; i < parseInt(count); i++) {
     const newCattle = new Cattle({
       tag: `CALF_${Date.now()}_${i}`,
-      ranch: new mongoose.Types.ObjectId(),
+      ranch: ranchId,
       birthDate: new Date(),
       status: 'active'
     });
@@ -816,6 +887,7 @@ app.listen(PORT, () => {
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📱 WhatsApp configured: ${!!process.env.WHATSAPP_ACCESS_TOKEN}`);
   console.log(`🗄️  MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Connecting...'}`);
+  console.log(`🐄 Auto-demo ranch creation: ENABLED`);
 });
 
 module.exports = app;
