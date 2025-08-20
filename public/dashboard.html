@@ -214,8 +214,9 @@
             color: #666;
             border-bottom: 2px solid #e0e0e0;
             position: sticky;
-            top: 140px;
+            top: 110px;
             z-index: 10;
+            background: #f8f9fa;
         }
 
         td {
@@ -371,16 +372,6 @@
             color: #2c3e50;
         }
 
-        .chart-placeholder {
-            height: 300px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-        }
-
         /* Weather Widget */
         .weather-widget {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -504,7 +495,7 @@
         .notification.show {
             display: block;
         }
-        </style>
+    </style>
     <!-- Add Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -562,7 +553,7 @@
             <strong>⚠️ Modo Demonstração</strong> - Os dados mostrados são fictícios. Quando você se tornar assinante, você poderá:
             <ul style="margin-top: 10px; margin-left: 20px;">
                 <li>Cadastrar seus pastos reais com nomes e tamanhos personalizados</li>
-                <li>Registrar seu rebanho completo: <strong>Bovinos 🐄, Bubalinos 🐃, Equinos 🐴, Suínos 🐷 e Ovinos 🐑</strong></li>
+                <li>Registrar seu rebanho completo: <strong>Bovinos 🐄, Equinos 🐴, Suínos 🐷 e Ovinos 🐑</strong></li>
                 <li>Adicionar seus vaqueiros e funcionários reais</li>
                 <li>Configurar alertas personalizados e relatórios</li>
             </ul>
@@ -573,7 +564,7 @@
             <div class="stat-card">
                 <div class="stat-label">Total de Animais</div>
                 <div class="stat-value" id="totalCattle">150</div>
-                <div class="stat-change">🐄 Bovinos: 120 | 🐃 Búfalos: 30</div>
+                <div class="stat-change">🐄 Bovinos: 150</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Nascimentos (Mês)</div>
@@ -587,8 +578,8 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Tipos de Criação</div>
-                <div class="stat-value">5</div>
-                <div class="stat-change">🐄🐃🐴🐷🐑 Todos suportados!</div>
+                <div class="stat-value">4</div>
+                <div class="stat-change">🐄🐴🐷🐑 Todos suportados!</div>
             </div>
         </div>
 
@@ -669,87 +660,79 @@
         <div class="charts-grid">
             <div class="chart-card">
                 <div class="chart-title">Crescimento do Rebanho</div>
-                <div class="chart-placeholder">
-                    <canvas id="growthChart"></canvas>
-                </div>
+                <canvas id="growthChart" style="height: 300px;"></canvas>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Distribuição por Pasto</div>
-                <div class="chart-placeholder">
-                    <canvas id="pastureChart"></canvas>
-                </div>
+                <canvas id="pastureChart" style="height: 300px;"></canvas>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Custos Mensais</div>
-                <div class="chart-placeholder">
-                    <canvas id="costsChart"></canvas>
-                </div>
+                <canvas id="costsChart" style="height: 300px;"></canvas>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Taxa de Natalidade</div>
-                <div class="chart-placeholder">
-                    <canvas id="birthRateChart"></canvas>
-                </div>
+                <canvas id="birthRateChart" style="height: 300px;"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Weather Tab -->
-   <!-- Weather Tab -->
-<div class="tab-content" id="weather-tab">
-    <!-- ADD THIS INPUT SECTION -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <input type="text" id="cityInput" placeholder="Digite a cidade... (ex: Cuiabá, MT)" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ddd;">
-        <button onclick="getWeather()" class="action-btn" style="margin-left: 10px;">Buscar Clima</button>
-    </div>
-    
-    <div class="weather-widget">
-        <h2>Clima - <span id="weatherLocation">Fazenda Demo</span></h2>
-        <div class="weather-main">
-            <div class="weather-temp" id="temperature">--°C</div>
-            <div>
-                <div id="weatherDescription">Aguardando busca...</div>
-                <div id="cityName">Digite uma cidade</div>
+    <div class="tab-content" id="weather-tab">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <input type="text" id="cityInput" placeholder="Digite a cidade... (ex: Cuiabá, MT)" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ddd;">
+            <button onclick="getWeather()" class="action-btn" style="margin-left: 10px;">Buscar Clima</button>
+        </div>
+        
+        <div class="weather-widget">
+            <h2>Clima - <span id="weatherLocation">Fazenda Demo</span></h2>
+            <div class="weather-main">
+                <div class="weather-temp" id="temperature">--°C</div>
+                <div>
+                    <div id="weatherDescription">Aguardando busca...</div>
+                    <div id="cityName">Digite uma cidade</div>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div>
+                    <div>Umidade</div>
+                    <div id="humidity">--%</div>
+                </div>
+                <div>
+                    <div>Vento</div>
+                    <div id="windSpeed">-- km/h</div>
+                </div>
+                <div>
+                    <div>Sensação</div>
+                    <div id="feelsLike">--°C</div>
+                </div>
+                <div>
+                    <div>Pressão</div>
+                    <div id="pressure">-- hPa</div>
+                </div>
             </div>
         </div>
-        <div class="weather-details">
-            <div>
-                <div>Umidade</div>
-                <div id="humidity">--%</div>
-            </div>
-            <div>
-               
-                <div>Vento</div>
-                <div id="windSpeed">-- km/h</div>
-            </div>
-            <div>
-                <div>Sensação</div>
-                <div id="feelsLike">--°C</div>
-            </div>
-            <div>
-                <div>Pressão</div>
-                <div id="pressure">-- hPa</div>
+        
+        <div class="chart-card" style="margin-top: 20px;">
+            <div class="chart-title">Alertas para Pecuaristas</div>
+            <div id="ranchTip" style="padding: 20px; font-size: 16px; line-height: 1.5;">
+                Digite uma cidade para ver alertas baseados no clima.
             </div>
         </div>
     </div>
-    <div class="chart-card" style="margin-top: 20px;">
-        <div class="chart-title">Alertas para Pecuaristas</div>
-        <div id="ranchTip" style="padding: 20px; font-size: 16px; line-height: 1.5;">
-            Digite uma cidade para ver alertas baseados no clima.
-        </div>
-    </div>
-</div>    <!-- Milk Production Tab -->
+
+    <!-- Milk Production Tab -->
     <div class="tab-content" id="milk-tab">
         <div class="milk-form">
-            <h3>Registrar Produção de Leite de Búfala</h3>
+            <h3>Registrar Produção de Leite</h3>
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Data</label>
                     <input type="date" class="form-input" id="milkDate">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Búfala ID</label>
-                    <input type="text" class="form-input" placeholder="Ex: BUF001">
+                    <label class="form-label">Vaca ID</label>
+                    <input type="text" class="form-input" placeholder="Ex: VAC001">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Litros (Manhã)</label>
@@ -765,7 +748,7 @@
         
         <div class="chart-card">
             <div class="chart-title">Produção Mensal</div>
-            <div class="chart-placeholder">Gráfico de produção de leite aqui</div>
+            <canvas id="milkChart" style="height: 300px;"></canvas>
         </div>
     </div>
 
@@ -815,46 +798,7 @@
                 analytics: 'Análises',
                 weather: 'Clima',
                 milk: 'Produção de Leite',
-                documents: 'Documentos',
-                demoMode: 'Modo Demonstração',
-                demoNotice: 'Os dados mostrados são fictícios. Quando você se tornar assinante, você poderá:',
-                customizePastures: 'Cadastrar seus pastos reais com nomes e tamanhos personalizados',
-                registerHerd: 'Registrar seu rebanho completo: Bovinos 🐄, Bubalinos 🐃, Equinos 🐴, Suínos 🐷 e Ovinos 🐑',
-                addWorkers: 'Adicionar seus vaqueiros e funcionários reais',
-                configureAlerts: 'Configurar alertas personalizados e relatórios',
-                fullSupport: 'Suporte completo incluído para todos os tipos de criação!',
-                totalAnimals: 'Total de Animais',
-                birthsMonth: 'Nascimentos (Mês)',
-                pendingVaccinations: 'Vacinações Pendentes',
-                livestockTypes: 'Tipos de Criação',
-                allSupported: 'Todos suportados!',
-                search: 'Buscar por brinco, raça, pasto...',
-                allPastures: 'Todos os Pastos',
-                filter: 'Filtrar',
-                addAnimal: '+ Adicionar Animal',
-                exportCSV: 'Exportar CSV',
-                tagId: 'Brinco/ID',
-                type: 'Tipo',
-                breed: 'Raça',
-                gender: 'Sexo',
-                age: 'Idade',
-                weight: 'Peso (kg)',
-                pasture: 'Pasto',
-                health: 'Saúde',
-                lastVaccination: 'Última Vacinação',
-                actions: 'Ações',
-                edit: 'Editar',
-                male: 'Macho',
-                female: 'Fêmea',
-                months: 'meses',
-                healthy: 'Saudável',
-                inTreatment: 'Em Tratamento',
-                remaining: 'restantes',
-                thisWeek: 'esta semana',
-                nextIn: 'Próxima em',
-                days: 'dias',
-                cattle: 'Bovinos',
-                buffalo: 'Búfalos'
+                documents: 'Documentos'
             },
             es: {
                 panel: 'Panel',
@@ -863,46 +807,7 @@
                 analytics: 'Análisis',
                 weather: 'Clima',
                 milk: 'Producción de Leche',
-                documents: 'Documentos',
-                demoMode: 'Modo Demostración',
-                demoNotice: 'Los datos mostrados son ficticios. Cuando te conviertas en suscriptor, podrás:',
-                customizePastures: 'Registrar tus pastos reales con nombres y tamaños personalizados',
-                registerHerd: 'Registrar tu rebaño completo: Bovinos 🐄, Búfalos 🐃, Equinos 🐴, Porcinos 🐷 y Ovinos 🐑',
-                addWorkers: 'Agregar tus vaqueros y empleados reales',
-                configureAlerts: 'Configurar alertas personalizadas e informes',
-                fullSupport: '¡Soporte completo incluido para todos los tipos de cría!',
-                totalAnimals: 'Total de Animales',
-                birthsMonth: 'Nacimientos (Mes)',
-                pendingVaccinations: 'Vacunaciones Pendientes',
-                livestockTypes: 'Tipos de Cría',
-                allSupported: '¡Todos soportados!',
-                search: 'Buscar por arete, raza, pasto...',
-                allPastures: 'Todos los Pastos',
-                filter: 'Filtrar',
-                addAnimal: '+ Agregar Animal',
-                exportCSV: 'Exportar CSV',
-                tagId: 'Arete/ID',
-                type: 'Tipo',
-                breed: 'Raza',
-                gender: 'Sexo',
-                age: 'Edad',
-                weight: 'Peso (kg)',
-                pasture: 'Pasto',
-                health: 'Salud',
-                lastVaccination: 'Última Vacunación',
-                actions: 'Acciones',
-                edit: 'Editar',
-                male: 'Macho',
-                female: 'Hembra',
-                months: 'meses',
-                healthy: 'Saludable',
-                inTreatment: 'En Tratamiento',
-                remaining: 'restantes',
-                thisWeek: 'esta semana',
-                nextIn: 'Próxima en',
-                days: 'días',
-                cattle: 'Bovinos',
-                buffalo: 'Búfalos'
+                documents: 'Documentos'
             },
             en: {
                 panel: 'Dashboard',
@@ -911,46 +816,7 @@
                 analytics: 'Analytics',
                 weather: 'Weather',
                 milk: 'Milk Production',
-                documents: 'Documents',
-                demoMode: 'Demo Mode',
-                demoNotice: 'The data shown is fictitious. When you become a subscriber, you will be able to:',
-                customizePastures: 'Register your real pastures with custom names and sizes',
-                registerHerd: 'Register your complete herd: Cattle 🐄, Buffalo 🐃, Horses 🐴, Swine 🐷 and Sheep 🐑',
-                addWorkers: 'Add your real cowboys and employees',
-                configureAlerts: 'Configure custom alerts and reports',
-                fullSupport: 'Full support included for all types of livestock!',
-                totalAnimals: 'Total Animals',
-                birthsMonth: 'Births (Month)',
-                pendingVaccinations: 'Pending Vaccinations',
-                livestockTypes: 'Livestock Types',
-                allSupported: 'All supported!',
-                search: 'Search by tag, breed, pasture...',
-                allPastures: 'All Pastures',
-                filter: 'Filter',
-                addAnimal: '+ Add Animal',
-                exportCSV: 'Export CSV',
-                tagId: 'Tag/ID',
-                type: 'Type',
-                breed: 'Breed',
-                gender: 'Gender',
-                age: 'Age',
-                weight: 'Weight (kg)',
-                pasture: 'Pasture',
-                health: 'Health',
-                lastVaccination: 'Last Vaccination',
-                actions: 'Actions',
-                edit: 'Edit',
-                male: 'Male',
-                female: 'Female',
-                months: 'months',
-                healthy: 'Healthy',
-                inTreatment: 'In Treatment',
-                remaining: 'remaining',
-                thisWeek: 'this week',
-                nextIn: 'Next in',
-                days: 'days',
-                cattle: 'Cattle',
-                buffalo: 'Buffalo'
+                documents: 'Documents'
             }
         };
 
@@ -976,10 +842,11 @@
             for (let i = 1; i <= 150; i++) {
                 demoData.cattle.push({
                     tag: `BOV${String(i).padStart(3, '0')}`,
+                    type: 'Bovino',
                     breed: breeds[Math.floor(Math.random() * breeds.length)],
                     gender: Math.random() > 0.5 ? 'Macho' : 'Fêmea',
-                    age: Math.floor(Math.random() * 60) + 6, // 6-66 months
-                    weight: Math.floor(Math.random() * 300) + 300, // 300-600kg
+                    age: Math.floor(Math.random() * 60) + 6,
+                    weight: Math.floor(Math.random() * 300) + 300,
                     pasture: pastures[Math.floor(Math.random() * pastures.length)],
                     health: Math.random() > 0.9 ? 'Em Tratamento' : 'Saudável',
                     lastVaccine: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')
@@ -1125,25 +992,6 @@
             }, 3000);
         }
 
-        // Search inventory
-        document.getElementById('searchInput')?.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('#inventoryTableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
-        });
-
-        // File upload
-        document.getElementById('fileInput')?.addEventListener('change', (e) => {
-            const files = e.target.files;
-            if (files.length > 0) {
-                showNotification(`${files.length} arquivo(s) carregado(s) com sucesso!`);
-            }
-        });
-
         // Trial timer
         function updateTrialTimer() {
             const endTime = new Date(Date.now() + 36 * 60 * 60 * 1000);
@@ -1165,9 +1013,6 @@
 
         // WebSocket connection for real-time updates
         function connectWebSocket() {
-            // Connect to your backend
-            // const socket = new WebSocket('wss://oyster-app-zqs92.ondigitalocean.app/ws');
-            
             // For now, simulate incoming WhatsApp messages
             setInterval(() => {
                 if (Math.random() > 0.7) {
@@ -1189,43 +1034,10 @@
                         document.getElementById('birthsMonth').textContent = demoData.birthsMonth;
                     }
                 }
-            }, 10000); // Every 10 seconds
+            }, 10000);
         }
 
-        // Initialize
-        window.onload = function() {
-            // Clear cattle array before generating
-            demoData.cattle = [];
-            generateDemoCattle();
-            generateDemoMessages();
-            updateTrialTimer();
-            connectWebSocket();
-
-            initCharts();            
-            // Set initial ranch name if provided
-            const urlParams = new URLSearchParams(window.location.search);
-            const ranchName = urlParams.get('ranch');
-            if (ranchName) {
-                document.getElementById('ranchName').textContent = ranchName;
-            }
-            
-            // Language selector
-            document.getElementById('languageSelector').addEventListener('change', (e) => {
-                switchLanguage(e.target.value);
-            });
-        };
-        
-        
-        // Language selector
-            document.getElementById('languageSelector').addEventListener('change', (e) => {
-                // For now, just store the selection
-                currentLang = e.target.value;
-                t = translations[currentLang];
-                // In a full implementation, you'd update all text elements here
-            });
-        };
-        
-        // REAL Brazilian Weather API Functions
+        // Weather functions
         function getWeather() {
             const city = document.getElementById('cityInput').value;
             if (!city) {
@@ -1251,7 +1063,7 @@
                     const lon = locationData[0].lon;
                     const displayName = locationData[0].display_name.split(',')[0];
                     
-                    // Get REAL weather from Open-Meteo (FREE!)
+                    // Get REAL weather from Open-Meteo
                     return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,apparent_temperature&timezone=America/Sao_Paulo`)
                         .then(response => response.json())
                         .then(weatherData => {
@@ -1315,100 +1127,157 @@
             
             document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
         }
-        // Ranch-specific alerts
-function generateRanchAlerts(current) {
-    const temp = current.temperature_2m;
-    const humidity = current.relative_humidity_2m;
-    
-    let tip = '';
-    
-    if (temp > 35) {
-        tip = '🔥 ALERTA CALOR EXTREMO! Garanta água abundante e sombra. Evite manejo entre 10h-16h.';
-    } else if (temp < 10) {
-        tip = '❄️ FRIO INTENSO! Forneça alimentação extra. Proteja bezerros.';
-    } else if (humidity > 85 && temp > 25) {
-        tip = '🦟 RISCO PARASITAS! Alta umidade favorece carrapatos. Intensifique monitoramento.';
-    } else if (temp >= 20 && temp <= 28 && humidity >= 50 && humidity <= 70) {
-        tip = '✅ CONDIÇÕES PERFEITAS! Ideal para vacinação, pesagem e manejo geral.';
-    } else {
-        tip = '👍 Condições normais para manejo do rebanho.';
-    }
-    
-    document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
-}
 
-// ADD THE NEW FUNCTION HERE:
-// Initialize Charts for Analytics Tab
-function initCharts() {
-    setTimeout(() => {
-        // Growth Chart
-        const growthCtx = document.getElementById('growthChart');
-        if (growthCtx) {
-            new Chart(growthCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                    datasets: [{
-                        label: 'Total de Animais',
-                        data: [120, 125, 130, 138, 145, 150],
-                        borderColor: '#27ae60',
-                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                        tension: 0.3
-                    }]
+        // Initialize Charts for Analytics Tab
+        function initCharts() {
+            setTimeout(() => {
+                // Growth Chart
+                const growthCtx = document.getElementById('growthChart');
+                if (growthCtx) {
+                    new Chart(growthCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                            datasets: [{
+                                label: 'Total de Animais',
+                                data: [120, 125, 130, 138, 145, 150],
+                                borderColor: '#27ae60',
+                                backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+                
+                // Pasture Distribution
+                const pastureCtx = document.getElementById('pastureChart');
+                if (pastureCtx) {
+                    new Chart(pastureCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
+                            datasets: [{
+                                data: [35, 28, 25, 32, 30],
+                                backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+                
+                // Costs Chart
+                const costsCtx = document.getElementById('costsChart');
+                if (costsCtx) {
+                    new Chart(costsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
+                            datasets: [{
+                                label: 'Custos (R$)',
+                                data: [4500, 2200, 1800, 3200, 1500],
+                                backgroundColor: '#e74c3c'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+                
+                // Birth Rate Chart
+                const birthCtx = document.getElementById('birthRateChart');
+                if (birthCtx) {
+                    new Chart(birthCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                            datasets: [{
+                                label: 'Nascimentos',
+                                data: [8, 12, 10, 15, 11, 12],
+                                borderColor: '#9b59b6',
+                                backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+                
+                // Milk Production Chart
+                const milkCtx = document.getElementById('milkChart');
+                if (milkCtx) {
+                    new Chart(milkCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                            datasets: [{
+                                label: 'Litros de Leite',
+                                data: [850, 920, 890, 940],
+                                backgroundColor: '#3498db'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        // Initialize everything
+        window.onload = function() {
+            // Clear cattle array before generating
+            demoData.cattle = [];
+            generateDemoCattle();
+            generateDemoMessages();
+            updateTrialTimer();
+            connectWebSocket();
+            initCharts();
+            
+            // Set initial ranch name if provided
+            const urlParams = new URLSearchParams(window.location.search);
+            const ranchName = urlParams.get('ranch');
+            if (ranchName) {
+                document.getElementById('ranchName').textContent = ranchName;
+            }
+            
+            // Language selector
+            document.getElementById('languageSelector').addEventListener('change', (e) => {
+                currentLang = e.target.value;
+                t = translations[currentLang];
+            });
+            
+            // Search inventory
+            document.getElementById('searchInput')?.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#inventoryTableBody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            });
+
+            // File upload
+            document.getElementById('fileInput')?.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    showNotification(`${files.length} arquivo(s) carregado(s) com sucesso!`);
                 }
             });
-        }
-        
-        // Pasture Distribution
-        const pastureCtx = document.getElementById('pastureChart');
-        if (pastureCtx) {
-            new Chart(pastureCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
-                    datasets: [{
-                        data: [35, 28, 25, 32, 30],
-                        backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
-                    }]
-                }
-            });
-        }
-        
-        // Costs Chart
-        const costsCtx = document.getElementById('costsChart');
-        if (costsCtx) {
-            new Chart(costsCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
-                    datasets: [{
-                        label: 'Custos (R$)',
-                        data: [4500, 2200, 1800, 3200, 1500],
-                        backgroundColor: '#e74c3c'
-                    }]
-                }
-            });
-        }
-        
-        // Birth Rate Chart
-        const birthCtx = document.getElementById('birthRateChart');
-        if (birthCtx) {
-            new Chart(birthCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                    datasets: [{
-                        label: 'Nascimentos',
-                        data: [8, 12, 10, 15, 11, 12],
-                        borderColor: '#9b59b6',
-                        backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                        tension: 0.3
-                    }]
-                }
-            });
-        }
-    }, 100);
-}
-</script>
+        };
+    </script>
 </body>
-</html>    
+</html>
