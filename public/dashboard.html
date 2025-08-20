@@ -504,7 +504,9 @@
         .notification.show {
             display: block;
         }
-    </style>
+        </style>
+    <!-- Add Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -1198,7 +1200,8 @@
             generateDemoMessages();
             updateTrialTimer();
             connectWebSocket();
-            
+
+            initCharts();            
             // Set initial ranch name if provided
             const urlParams = new URLSearchParams(window.location.search);
             const ranchName = urlParams.get('ranch');
@@ -1312,6 +1315,100 @@
             
             document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
         }
-    </script>
+        // Ranch-specific alerts
+function generateRanchAlerts(current) {
+    const temp = current.temperature_2m;
+    const humidity = current.relative_humidity_2m;
+    
+    let tip = '';
+    
+    if (temp > 35) {
+        tip = '🔥 ALERTA CALOR EXTREMO! Garanta água abundante e sombra. Evite manejo entre 10h-16h.';
+    } else if (temp < 10) {
+        tip = '❄️ FRIO INTENSO! Forneça alimentação extra. Proteja bezerros.';
+    } else if (humidity > 85 && temp > 25) {
+        tip = '🦟 RISCO PARASITAS! Alta umidade favorece carrapatos. Intensifique monitoramento.';
+    } else if (temp >= 20 && temp <= 28 && humidity >= 50 && humidity <= 70) {
+        tip = '✅ CONDIÇÕES PERFEITAS! Ideal para vacinação, pesagem e manejo geral.';
+    } else {
+        tip = '👍 Condições normais para manejo do rebanho.';
+    }
+    
+    document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
+}
+
+// ADD THE NEW FUNCTION HERE:
+// Initialize Charts for Analytics Tab
+function initCharts() {
+    setTimeout(() => {
+        // Growth Chart
+        const growthCtx = document.getElementById('growthChart');
+        if (growthCtx) {
+            new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Total de Animais',
+                        data: [120, 125, 130, 138, 145, 150],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        tension: 0.3
+                    }]
+                }
+            });
+        }
+        
+        // Pasture Distribution
+        const pastureCtx = document.getElementById('pastureChart');
+        if (pastureCtx) {
+            new Chart(pastureCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
+                    datasets: [{
+                        data: [35, 28, 25, 32, 30],
+                        backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
+                    }]
+                }
+            });
+        }
+        
+        // Costs Chart
+        const costsCtx = document.getElementById('costsChart');
+        if (costsCtx) {
+            new Chart(costsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
+                    datasets: [{
+                        label: 'Custos (R$)',
+                        data: [4500, 2200, 1800, 3200, 1500],
+                        backgroundColor: '#e74c3c'
+                    }]
+                }
+            });
+        }
+        
+        // Birth Rate Chart
+        const birthCtx = document.getElementById('birthRateChart');
+        if (birthCtx) {
+            new Chart(birthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Nascimentos',
+                        data: [8, 12, 10, 15, 11, 12],
+                        borderColor: '#9b59b6',
+                        backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                        tension: 0.3
+                    }]
+                }
+            });
+        }
+    }, 100);
+}
+</script>
 </body>
-</html>
+</html>    
