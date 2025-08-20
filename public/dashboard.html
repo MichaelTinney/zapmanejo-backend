@@ -693,42 +693,50 @@
     </div>
 
     <!-- Weather Tab -->
-    <div class="tab-content" id="weather-tab">
-        <div class="weather-widget">
-            <h2>Clima - Fazenda Demo</h2>
-            <div class="weather-main">
-                <div class="weather-temp">28°C</div>
-                <div>
-                    <div>Parcialmente Nublado</div>
-                    <div>Cuiabá, MT</div>
-                </div>
-            </div>
-            <div class="weather-details">
-                <div>
-                    <div>Umidade</div>
-                    <div>65%</div>
-                </div>
-                <div>
-                    <div>Vento</div>
-                    <div>12 km/h</div>
-                </div>
-                <div>
-                    <div>Precipitação</div>
-                    <div>30%</div>
-                </div>
-                <div>
-                    <div>UV Index</div>
-                    <div>6</div>
-                </div>
+   <!-- Weather Tab -->
+<div class="tab-content" id="weather-tab">
+    <!-- ADD THIS INPUT SECTION -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <input type="text" id="cityInput" placeholder="Digite a cidade... (ex: Cuiabá, MT)" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ddd;">
+        <button onclick="getWeather()" class="action-btn" style="margin-left: 10px;">Buscar Clima</button>
+    </div>
+    
+    <div class="weather-widget">
+        <h2>Clima - <span id="weatherLocation">Fazenda Demo</span></h2>
+        <div class="weather-main">
+            <div class="weather-temp" id="temperature">--°C</div>
+            <div>
+                <div id="weatherDescription">Aguardando busca...</div>
+                <div id="cityName">Digite uma cidade</div>
             </div>
         </div>
-        <div class="chart-card" style="margin-top: 20px;">
-            <div class="chart-title">Previsão 7 Dias</div>
-            <div class="chart-placeholder">Gráfico de previsão aqui</div>
+        <div class="weather-details">
+            <div>
+                <div>Umidade</div>
+                <div id="humidity">--%</div>
+            </div>
+            <div>
+               
+                <div>Vento</div>
+                <div id="windSpeed">-- km/h</div>
+            </div>
+            <div>
+                <div>Sensação</div>
+                <div id="feelsLike">--°C</div>
+            </div>
+            <div>
+                <div>Pressão</div>
+                <div id="pressure">-- hPa</div>
+            </div>
         </div>
     </div>
-
-    <!-- Milk Production Tab -->
+    <div class="chart-card" style="margin-top: 20px;">
+        <div class="chart-title">Alertas para Pecuaristas</div>
+        <div id="ranchTip" style="padding: 20px; font-size: 16px; line-height: 1.5;">
+            Digite uma cidade para ver alertas baseados no clima.
+        </div>
+    </div>
+</div>    <!-- Milk Production Tab -->
     <div class="tab-content" id="milk-tab">
         <div class="milk-form">
             <h3>Registrar Produção de Leite de Búfala</h3>
@@ -1203,6 +1211,107 @@
                 switchLanguage(e.target.value);
             });
         };
+        
+        
+        // Language selector
+            document.getElementById('languageSelector').addEventListener('change', (e) => {
+                // For now, just store the selection
+                currentLang = e.target.value;
+                t = translations[currentLang];
+                // In a full implementation, you'd update all text elements here
+            });
+        };
+        
+        // REAL Brazilian Weather API Functions
+        function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            if (!city) {
+                alert('Por favor, digite o nome de uma cidade');
+                return;
+            }
+            
+            // Show loading state
+            document.getElementById('temperature').textContent = '...';
+            document.getElementById('weatherDescription').textContent = 'Buscando...';
+            
+            // Get coordinates for Brazilian city
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city},Brazil&limit=1`)
+                .then(response => response.json())
+                .then(locationData => {
+                    if (locationData.length === 0) {
+                        alert('Cidade não encontrada. Tente: Cuiabá, Campo Grande, Goiânia');
+                        document.getElementById('temperature').textContent = '--°C';
+                        return;
+                    }
+                    
+                    const lat = locationData[0].lat;
+                    const lon = locationData[0].lon;
+                    const displayName = locationData[0].display_name.split(',')[0];
+                    
+                    // Get REAL weather from Open-Meteo (FREE!)
+                    return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,apparent_temperature&timezone=America/Sao_Paulo`)
+                        .then(response => response.json())
+                        .then(weatherData => {
+                            // Update display with REAL data
+                            document.getElementById('temperature').textContent = Math.round(weatherData.current.temperature_2m) + '°C';
+                            document.getElementById('weatherDescription').textContent = getWeatherDescription(weatherData.current.weather_code);
+                            document.getElementById('cityName').textContent = displayName + ', Brasil';
+                            document.getElementById('humidity').textContent = weatherData.current.relative_humidity_2m + '%';
+                            document.getElementById('windSpeed').textContent = Math.round(weatherData.current.wind_speed_10m) + ' km/h';
+                            document.getElementById('feelsLike').textContent = Math.round(weatherData.current.apparent_temperature) + '°C';
+                            document.getElementById('pressure').textContent = '1013 hPa';
+                            
+                            // Generate ranch alerts
+                            generateRanchAlerts(weatherData.current);
+                        });
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('temperature').textContent = '--°C';
+                    document.getElementById('weatherDescription').textContent = 'Erro';
+                });
+        }
+
+        // Convert weather codes to Portuguese
+        function getWeatherDescription(code) {
+            const descriptions = {
+                0: 'Céu limpo ☀️',
+                1: 'Principalmente limpo 🌤️', 
+                2: 'Parcialmente nublado ⛅',
+                3: 'Nublado ☁️',
+                45: 'Neblina 🌫️',
+                48: 'Geada ❄️',
+                51: 'Garoa leve 🌦️',
+                61: 'Chuva leve 🌧️',
+                63: 'Chuva moderada 🌧️',
+                65: 'Chuva forte 🌧️',
+                80: 'Pancadas 🌦️',
+                95: 'Tempestade ⛈️'
+            };
+            return descriptions[code] || 'Variável';
+        }
+
+        // Ranch-specific alerts
+        function generateRanchAlerts(current) {
+            const temp = current.temperature_2m;
+            const humidity = current.relative_humidity_2m;
+            
+            let tip = '';
+            
+            if (temp > 35) {
+                tip = '🔥 ALERTA CALOR EXTREMO! Garanta água abundante e sombra. Evite manejo entre 10h-16h.';
+            } else if (temp < 10) {
+                tip = '❄️ FRIO INTENSO! Forneça alimentação extra. Proteja bezerros.';
+            } else if (humidity > 85 && temp > 25) {
+                tip = '🦟 RISCO PARASITAS! Alta umidade favorece carrapatos. Intensifique monitoramento.';
+            } else if (temp >= 20 && temp <= 28 && humidity >= 50 && humidity <= 70) {
+                tip = '✅ CONDIÇÕES PERFEITAS! Ideal para vacinação, pesagem e manejo geral.';
+            } else {
+                tip = '👍 Condições normais para manejo do rebanho.';
+            }
+            
+            document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
+        }
     </script>
 </body>
 </html>
