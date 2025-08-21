@@ -197,13 +197,25 @@
         .inventory-table {
             background: white;
             border-radius: 10px;
-            overflow: hidden;
+            overflow: auto;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .table-wrapper {
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         th {
@@ -213,10 +225,6 @@
             font-weight: 600;
             color: #666;
             border-bottom: 2px solid #e0e0e0;
-            position: sticky;
-            top: 110px;
-            z-index: 10;
-            background: #f8f9fa;
         }
 
         td {
@@ -372,6 +380,11 @@
             color: #2c3e50;
         }
 
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
         /* Weather Widget */
         .weather-widget {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -522,25 +535,25 @@
     <!-- Tab Navigation -->
     <div class="tab-nav">
         <div class="tab-nav-content">
-            <button class="tab-btn active" onclick="switchTab('dashboard')">
+            <button class="tab-btn active" onclick="switchTab('dashboard', this)">
                 <span>📊</span>Painel
             </button>
-            <button class="tab-btn" onclick="switchTab('inventory')">
+            <button class="tab-btn" onclick="switchTab('inventory', this)">
                 <span>📋</span>Inventário
             </button>
-            <button class="tab-btn" onclick="switchTab('whatsapp')">
+            <button class="tab-btn" onclick="switchTab('whatsapp', this)">
                 <span>💬</span>WhatsApp
             </button>
-            <button class="tab-btn" onclick="switchTab('analytics')">
+            <button class="tab-btn" onclick="switchTab('analytics', this)">
                 <span>📈</span>Análises
             </button>
-            <button class="tab-btn" onclick="switchTab('weather')">
+            <button class="tab-btn" onclick="switchTab('weather', this)">
                 <span>☁️</span>Clima
             </button>
-            <button class="tab-btn" onclick="switchTab('milk')">
+            <button class="tab-btn" onclick="switchTab('milk', this)">
                 <span>🥛</span>Produção de Leite
             </button>
-            <button class="tab-btn" onclick="switchTab('documents')">
+            <button class="tab-btn" onclick="switchTab('documents', this)">
                 <span>📁</span>Documentos
             </button>
         </div>
@@ -595,7 +608,7 @@
     <div class="tab-content" id="inventory-tab">
         <div class="inventory-controls">
             <input type="text" class="search-box" placeholder="Buscar por brinco, raça, pasto..." id="searchInput">
-            <select class="form-input">
+            <select class="form-input" style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px;">
                 <option>Todos os Pastos</option>
                 <option>Pasto Esperança</option>
                 <option>Pasto Vitória</option>
@@ -609,25 +622,27 @@
         </div>
 
         <div class="inventory-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Brinco/ID</th>
-                        <th>Tipo</th>
-                        <th>Raça</th>
-                        <th>Sexo</th>
-                        <th>Idade</th>
-                        <th>Peso (kg)</th>
-                        <th>Pasto</th>
-                        <th>Saúde</th>
-                        <th>Última Vacinação</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryTableBody">
-                    <!-- Cattle rows will be added here -->
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Brinco/ID</th>
+                            <th>Tipo</th>
+                            <th>Raça</th>
+                            <th>Sexo</th>
+                            <th>Idade</th>
+                            <th>Peso (kg)</th>
+                            <th>Pasto</th>
+                            <th>Saúde</th>
+                            <th>Última Vacinação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <!-- Cattle rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -660,19 +675,27 @@
         <div class="charts-grid">
             <div class="chart-card">
                 <div class="chart-title">Crescimento do Rebanho</div>
-                <canvas id="growthChart" style="height: 300px;"></canvas>
+                <div class="chart-container">
+                    <canvas id="growthChart"></canvas>
+                </div>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Distribuição por Pasto</div>
-                <canvas id="pastureChart" style="height: 300px;"></canvas>
+                <div class="chart-container">
+                    <canvas id="pastureChart"></canvas>
+                </div>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Custos Mensais</div>
-                <canvas id="costsChart" style="height: 300px;"></canvas>
+                <div class="chart-container">
+                    <canvas id="costsChart"></canvas>
+                </div>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Taxa de Natalidade</div>
-                <canvas id="birthRateChart" style="height: 300px;"></canvas>
+                <div class="chart-container">
+                    <canvas id="birthRateChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -748,7 +771,9 @@
         
         <div class="chart-card">
             <div class="chart-title">Produção Mensal</div>
-            <canvas id="milkChart" style="height: 300px;"></canvas>
+            <div class="chart-container">
+                <canvas id="milkChart"></canvas>
+            </div>
         </div>
     </div>
 
@@ -762,26 +787,28 @@
         </div>
         
         <div class="inventory-table" style="margin-top: 20px;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome do Arquivo</th>
-                        <th>Tipo</th>
-                        <th>Tamanho</th>
-                        <th>Data de Upload</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="documentsTableBody">
-                    <tr>
-                        <td>inventario_janeiro_2024.csv</td>
-                        <td>CSV</td>
-                        <td>24 KB</td>
-                        <td>15/01/2024</td>
-                        <td><button class="action-btn">Baixar</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome do Arquivo</th>
+                            <th>Tipo</th>
+                            <th>Tamanho</th>
+                            <th>Data de Upload</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTableBody">
+                        <tr>
+                            <td>inventario_janeiro_2024.csv</td>
+                            <td>CSV</td>
+                            <td>24 KB</td>
+                            <td>15/01/2024</td>
+                            <td><button class="action-btn">Baixar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -789,40 +816,6 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Translations
-        const translations = {
-            pt: {
-                panel: 'Painel',
-                inventory: 'Inventário',
-                whatsapp: 'WhatsApp',
-                analytics: 'Análises',
-                weather: 'Clima',
-                milk: 'Produção de Leite',
-                documents: 'Documentos'
-            },
-            es: {
-                panel: 'Panel',
-                inventory: 'Inventario',
-                whatsapp: 'WhatsApp',
-                analytics: 'Análisis',
-                weather: 'Clima',
-                milk: 'Producción de Leche',
-                documents: 'Documentos'
-            },
-            en: {
-                panel: 'Dashboard',
-                inventory: 'Inventory',
-                whatsapp: 'WhatsApp',
-                analytics: 'Analytics',
-                weather: 'Weather',
-                milk: 'Milk Production',
-                documents: 'Documents'
-            }
-        };
-
-        let currentLang = 'pt';
-        let t = translations[currentLang];
-
         // Demo data
         let demoData = {
             ranchName: 'Fazenda Demo',
@@ -831,7 +824,8 @@
             vaccinations: 23,
             cattle: [],
             messages: [],
-            activities: []
+            activities: [],
+            charts: {}
         };
 
         // Generate demo cattle
@@ -839,6 +833,7 @@
             const breeds = ['Nelore', 'Angus', 'Brahman', 'Gir', 'Guzerá'];
             const pastures = ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'];
             
+            demoData.cattle = [];
             for (let i = 1; i <= 150; i++) {
                 demoData.cattle.push({
                     tag: `BOV${String(i).padStart(3, '0')}`,
@@ -865,6 +860,7 @@
                 'Peso da vaca 501: 420kg'
             ];
             
+            demoData.messages = [];
             for (let i = 0; i < 10; i++) {
                 demoData.messages.push({
                     sender: vaqueiros[Math.floor(Math.random() * vaqueiros.length)],
@@ -875,8 +871,8 @@
             }
         }
 
-        // Switch tabs
-        function switchTab(tabName) {
+        // Switch tabs - FIXED VERSION
+        function switchTab(tabName, button) {
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -891,13 +887,16 @@
             document.getElementById(`${tabName}-tab`).classList.add('active');
             
             // Mark button as active
-            event.target.classList.add('active');
+            button.classList.add('active');
             
             // Load tab-specific data
             if (tabName === 'inventory') {
                 loadInventory();
             } else if (tabName === 'whatsapp') {
                 loadMessages();
+            } else if (tabName === 'analytics') {
+                // IMPORTANT: Initialize charts when analytics tab is opened
+                setTimeout(() => initAnalyticsCharts(), 100);
             }
         }
 
@@ -907,21 +906,20 @@
             tbody.innerHTML = '';
             
             demoData.cattle.forEach(animal => {
-                const row = `
-                    <tr>
-                        <td><span class="tag-badge">${animal.tag}</span></td>
-                        <td>${animal.type}</td>
-                        <td>${animal.breed}</td>
-                        <td>${animal.gender}</td>
-                        <td>${animal.age} meses</td>
-                        <td>${animal.weight}</td>
-                        <td>${animal.pasture}</td>
-                        <td class="${animal.health === 'Saudável' ? 'status-healthy' : 'status-sick'}">${animal.health}</td>
-                        <td>${animal.lastVaccine}</td>
-                        <td><button class="action-btn">Editar</button></td>
-                    </tr>
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="tag-badge">${animal.tag}</span></td>
+                    <td>${animal.type}</td>
+                    <td>${animal.breed}</td>
+                    <td>${animal.gender}</td>
+                    <td>${animal.age} meses</td>
+                    <td>${animal.weight}</td>
+                    <td>${animal.pasture}</td>
+                    <td class="${animal.health === 'Saudável' ? 'status-healthy' : 'status-sick'}">${animal.health}</td>
+                    <td>${animal.lastVaccine}</td>
+                    <td><button class="action-btn">Editar</button></td>
                 `;
-                tbody.innerHTML += row;
+                tbody.appendChild(row);
             });
         }
 
@@ -931,14 +929,15 @@
             messageList.innerHTML = '';
             
             demoData.messages.sort((a, b) => b.time - a.time).forEach(msg => {
-                const item = `
-                    <div class="message-item" onclick="openChat('${msg.sender}', '${msg.phone}')">
-                        <div class="message-sender">${msg.sender}</div>
-                        <div class="message-preview">${msg.message}</div>
-                        <div class="message-time">${msg.time.toLocaleString('pt-BR')}</div>
-                    </div>
+                const item = document.createElement('div');
+                item.className = 'message-item';
+                item.onclick = () => openChat(msg.sender, msg.phone);
+                item.innerHTML = `
+                    <div class="message-sender">${msg.sender}</div>
+                    <div class="message-preview">${msg.message}</div>
+                    <div class="message-time">${msg.time.toLocaleString('pt-BR')}</div>
                 `;
-                messageList.innerHTML += item;
+                messageList.appendChild(item);
             });
         }
 
@@ -962,20 +961,18 @@
             
             if (message) {
                 const chatMessages = document.getElementById('chatMessages');
-                chatMessages.innerHTML += `
-                    <div class="chat-message sent">
-                        <div class="message-bubble sent">${message}</div>
-                    </div>
-                `;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message sent';
+                msgDiv.innerHTML = `<div class="message-bubble sent">${message}</div>`;
+                chatMessages.appendChild(msgDiv);
                 input.value = '';
                 
                 // Simulate response
                 setTimeout(() => {
-                    chatMessages.innerHTML += `
-                        <div class="chat-message">
-                            <div class="message-bubble">✅ Mensagem recebida e processada!</div>
-                        </div>
-                    `;
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'chat-message';
+                    responseDiv.innerHTML = `<div class="message-bubble">✅ Mensagem recebida e processada!</div>`;
+                    chatMessages.appendChild(responseDiv);
                     showNotification('Mensagem enviada via WhatsApp!');
                 }, 1000);
             }
@@ -1011,30 +1008,169 @@
             }, 1000);
         }
 
-        // WebSocket connection for real-time updates
-        function connectWebSocket() {
-            // For now, simulate incoming WhatsApp messages
-            setInterval(() => {
-                if (Math.random() > 0.7) {
-                    const activities = [
-                        '🐄 Nascimento registrado via WhatsApp',
-                        '💉 Vacinação registrada via WhatsApp',
-                        '🚚 Movimentação de gado registrada',
-                        '🌧️ Precipitação registrada: 15mm'
-                    ];
-                    
-                    const activity = activities[Math.floor(Math.random() * activities.length)];
-                    showNotification(activity);
-                    
-                    // Update stats
-                    if (activity.includes('Nascimento')) {
-                        demoData.totalCattle++;
-                        demoData.birthsMonth++;
-                        document.getElementById('totalCattle').textContent = demoData.totalCattle;
-                        document.getElementById('birthsMonth').textContent = demoData.birthsMonth;
+        // Initialize Analytics Charts - FIXED VERSION
+        function initAnalyticsCharts() {
+            // Destroy existing charts if they exist
+            Object.values(demoData.charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            
+            // Growth Chart
+            const growthCtx = document.getElementById('growthChart');
+            if (growthCtx) {
+                demoData.charts.growth = new Chart(growthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                        datasets: [{
+                            label: 'Total de Animais',
+                            data: [120, 125, 130, 138, 145, 150],
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
-            }, 10000);
+                });
+            }
+            
+            // Pasture Distribution Chart
+            const pastureCtx = document.getElementById('pastureChart');
+            if (pastureCtx) {
+                demoData.charts.pasture = new Chart(pastureCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
+                        datasets: [{
+                            data: [35, 28, 25, 32, 30],
+                            backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Costs Chart
+            const costsCtx = document.getElementById('costsChart');
+            if (costsCtx) {
+                demoData.charts.costs = new Chart(costsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
+                        datasets: [{
+                            label: 'Custos (R$)',
+                            data: [4500, 2200, 1800, 3200, 1500],
+                            backgroundColor: '#e74c3c'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toLocaleString('pt-BR');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Birth Rate Chart
+            const birthCtx = document.getElementById('birthRateChart');
+            if (birthCtx) {
+                demoData.charts.birthRate = new Chart(birthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                        datasets: [{
+                            label: 'Nascimentos',
+                            data: [8, 12, 10, 15, 11, 12],
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Milk Production Chart
+            const milkCtx = document.getElementById('milkChart');
+            if (milkCtx) {
+                demoData.charts.milk = new Chart(milkCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                        datasets: [{
+                            label: 'Litros de Leite',
+                            data: [850, 920, 890, 940],
+                            backgroundColor: '#3498db'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + ' L';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         // Weather functions
@@ -1128,136 +1264,11 @@
             document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
         }
 
-        // Initialize Charts for Analytics Tab
-        function initCharts() {
-            setTimeout(() => {
-                // Growth Chart
-                const growthCtx = document.getElementById('growthChart');
-                if (growthCtx) {
-                    new Chart(growthCtx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                            datasets: [{
-                                label: 'Total de Animais',
-                                data: [120, 125, 130, 138, 145, 150],
-                                borderColor: '#27ae60',
-                                backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }
-                
-                // Pasture Distribution
-                const pastureCtx = document.getElementById('pastureChart');
-                if (pastureCtx) {
-                    new Chart(pastureCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
-                            datasets: [{
-                                data: [35, 28, 25, 32, 30],
-                                backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }
-                
-                // Costs Chart
-                const costsCtx = document.getElementById('costsChart');
-                if (costsCtx) {
-                    new Chart(costsCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
-                            datasets: [{
-                                label: 'Custos (R$)',
-                                data: [4500, 2200, 1800, 3200, 1500],
-                                backgroundColor: '#e74c3c'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }
-                
-                // Birth Rate Chart
-                const birthCtx = document.getElementById('birthRateChart');
-                if (birthCtx) {
-                    new Chart(birthCtx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                            datasets: [{
-                                label: 'Nascimentos',
-                                data: [8, 12, 10, 15, 11, 12],
-                                borderColor: '#9b59b6',
-                                backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }
-                
-                // Milk Production Chart
-                const milkCtx = document.getElementById('milkChart');
-                if (milkCtx) {
-                    new Chart(milkCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                            datasets: [{
-                                label: 'Litros de Leite',
-                                data: [850, 920, 890, 940],
-                                backgroundColor: '#3498db'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }
-            }, 100);
-        }
-
         // Initialize everything
         window.onload = function() {
-            // Clear cattle array before generating
-            demoData.cattle = [];
             generateDemoCattle();
             generateDemoMessages();
             updateTrialTimer();
-            connectWebSocket();
-            initCharts();
-            
-            // Set initial ranch name if provided
-            const urlParams = new URLSearchParams(window.location.search);
-            const ranchName = urlParams.get('ranch');
-            if (ranchName) {
-                document.getElementById('ranchName').textContent = ranchName;
-            }
-            
-            // Language selector
-            document.getElementById('languageSelector').addEventListener('change', (e) => {
-                currentLang = e.target.value;
-                t = translations[currentLang];
-            });
             
             // Search inventory
             document.getElementById('searchInput')?.addEventListener('input', (e) => {
@@ -1277,6 +1288,28 @@
                     showNotification(`${files.length} arquivo(s) carregado(s) com sucesso!`);
                 }
             });
+            
+            // Enter key for message input
+            document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Simulate incoming messages
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    const activities = [
+                        '🐄 Nascimento registrado via WhatsApp',
+                        '💉 Vacinação registrada via WhatsApp',
+                        '🚚 Movimentação de gado registrada',
+                        '🌧️ Precipitação registrada: 15mm'
+                    ];
+                    
+                    const activity = activities[Math.floor(Math.random() * activities.length)];
+                    showNotification(activity);
+                }
+            }, 15000);
         };
     </script>
 </body>
