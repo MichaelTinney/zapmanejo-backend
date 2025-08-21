@@ -816,6 +816,93 @@
     <div class="notification" id="notification"></div>
 
     <script>
+        // Update language function
+        function updateLanguage() {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const tabName = btn.getAttribute('onclick').match(/switchTab\('(\w+)'/)[1];
+                const mapping = {
+                    dashboard: t.panel,
+                    inventory: t.inventory,
+                    whatsapp: t.whatsapp,
+                    analytics: t.analytics,
+                    weather: t.weather,
+                    milk: t.milk,
+                    documents: t.documents
+                };
+                btn.innerHTML = btn.innerHTML.replace(/>.*<\/span>/, `>${btn.querySelector('span').textContent}</span>`) + mapping[tabName];
+            });
+            
+            // Update demo notice
+            const demoNotice = document.querySelector('#dashboard-tab > div');
+            if (demoNotice && demoNotice.style.background === 'rgb(255, 243, 205)') {
+                demoNotice.innerHTML = `
+                    <strong>${t.demoWarning}</strong> - ${t.demoText}
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>${t.demoBenefit1}</li>
+                        <li>${t.demoBenefit2}</li>
+                        <li>${t.demoBenefit3}</li>
+                        <li>${t.demoBenefit4}</li>
+                    </ul>
+                    <strong>${t.demoSupport}</strong>
+                `;
+            }
+            
+            // Update stat cards
+            const statLabels = document.querySelectorAll('.stat-label');
+            if (statLabels.length >= 4) {
+                statLabels[0].textContent = t.totalAnimals;
+                statLabels[1].textContent = t.monthBirths;
+                statLabels[2].textContent = t.pendingVaccinations;
+                statLabels[3].textContent = t.animalTypes;
+            }
+            
+            // Update inventory
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            const filterBtn = document.querySelector('.filter-btn');
+            if (filterBtn) filterBtn.textContent = t.filter;
+            
+            // Update table headers
+            const thElements = document.querySelectorAll('#inventory-tab th');
+            const headerTexts = [t.tag, t.type, t.breed, t.gender, t.age, t.weight, t.pasture, t.health, t.lastVaccination, t.actions];
+            thElements.forEach((th, index) => {
+                if (headerTexts[index]) th.textContent = headerTexts[index];
+            });
+            
+            // Update WhatsApp tab
+            const messageListTitle = document.querySelector('#whatsapp-tab h3');
+            if (messageListTitle) messageListTitle.textContent = t.recentMessages;
+            document.getElementById('chatWith').textContent = t.selectConversation;
+            document.getElementById('messageInput').placeholder = t.typeMessage;
+            const sendBtn = document.querySelector('.send-btn');
+            if (sendBtn) sendBtn.textContent = t.send;
+            
+            // Update Weather tab
+            document.getElementById('cityInput').placeholder = t.searchCity;
+            const weatherBtn = document.querySelector('#weather-tab .action-btn');
+            if (weatherBtn) weatherBtn.textContent = t.searchWeather;
+            document.getElementById('weatherDescription').textContent = t.waitingSearch;
+            document.getElementById('cityName').textContent = t.enterCity;
+            
+            // Update chart titles
+            const chartTitles = document.querySelectorAll('.chart-title');
+            const chartTitleTexts = [t.recentActivity, t.herdGrowth, t.distributionByPasture, t.monthlyCosts, t.birthRate, t.monthlyProduction];
+            chartTitles.forEach((title, index) => {
+                if (chartTitleTexts[index]) title.textContent = chartTitleTexts[index];
+            });
+            
+            // Update Milk Production tab
+            const milkTitle = document.querySelector('#milk-tab h3');
+            if (milkTitle) milkTitle.textContent = t.registerProduction;
+            
+            // Update Documents tab
+            const uploadZone = document.querySelector('.upload-zone');
+            if (uploadZone) {
+                uploadZone.querySelector('h3').textContent = t.dragFiles;
+                uploadZone.querySelector('p').textContent = t.acceptedFormats;
+            }
+        }
+
         // Demo data
         let demoData = {
             ranchName: 'Fazenda Demo',
