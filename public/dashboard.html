@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZapManejo - Painel de Controle</title>
+    <title>ZapManejo Dashboard - Gestão Pecuária Profissional</title>
     <style>
         * {
             margin: 0;
@@ -13,113 +13,105 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f6fa;
-            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Header */
-        .header {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
+        .dashboard-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 15px 20px;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #27ae60;
+            color: #2d5016;
         }
 
-        .ranch-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .farm-info {
+            text-align: right;
         }
 
-        .ranch-name {
+        .farm-name {
+            font-size: 18px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #333;
         }
 
-        .trial-timer {
-            background: #ff6b6b;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+        .farm-details {
             font-size: 14px;
-            font-weight: 500;
+            color: #666;
+            margin-top: 5px;
         }
 
-        /* Tab Navigation */
-        .tab-nav {
+        .tabs-container {
             background: white;
-            border-bottom: 1px solid #e0e0e0;
-            position: sticky;
-            top: 70px;
-            z-index: 99;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .tab-nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
+        .tabs {
             display: flex;
+            gap: 10px;
             overflow-x: auto;
         }
 
-        .tab-btn {
-            padding: 15px 25px;
-            background: none;
+        .tab {
+            padding: 12px 24px;
+            background: #f0f0f0;
             border: none;
-            border-bottom: 3px solid transparent;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 15px;
             font-weight: 500;
             color: #666;
             white-space: nowrap;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .tab-btn:hover {
-            background: #f8f9fa;
-            color: #27ae60;
+        .tab:hover {
+            background: #e0e0e0;
         }
 
-        .tab-btn.active {
-            color: #27ae60;
-            border-bottom-color: #27ae60;
+        .tab.active {
+            background: linear-gradient(135deg, #3f7f00 0%, #2d5016 100%);
+            color: white;
         }
 
-        .tab-btn span {
-            margin-right: 8px;
-        }
-
-        /* Tab Content */
         .tab-content {
-            max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
             display: none;
         }
 
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
 
-        /* Dashboard Overview */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -129,82 +121,52 @@
 
         .stat-card {
             background: white;
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
         }
 
-        .stat-label {
-            color: #666;
-            font-size: 14px;
+        .stat-icon {
+            font-size: 24px;
             margin-bottom: 10px;
         }
 
         .stat-value {
             font-size: 32px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #2d5016;
+            margin-bottom: 5px;
         }
 
-        .stat-change {
-            color: #27ae60;
+        .stat-label {
             font-size: 14px;
-            margin-top: 5px;
+            color: #666;
         }
 
-        /* Inventory Table */
-        .inventory-controls {
+        .content-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+        }
+
+        .content-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 10px;
         }
 
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .filter-btn, .action-btn {
-            padding: 10px 20px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .filter-btn:hover, .action-btn:hover {
-            background: #229954;
-        }
-
-        .inventory-table {
-            background: white;
-            border-radius: 10px;
-            overflow: auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .table-wrapper {
-            max-height: 600px;
-            overflow-y: auto;
-            position: relative;
+        .table-container {
+            overflow-x: auto;
         }
 
         table {
@@ -212,241 +174,95 @@
             border-collapse: collapse;
         }
 
-        thead {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
         th {
-            background: #f8f9fa;
+            background: #f5f5f5;
             padding: 12px;
             text-align: left;
             font-weight: 600;
-            color: #666;
+            color: #333;
             border-bottom: 2px solid #e0e0e0;
         }
 
         td {
             padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         tr:hover {
-            background: #f8f9fa;
+            background: #fafafa;
         }
 
-        .tag-badge {
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pregnant {
             background: #e3f2fd;
             color: #1976d2;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 13px;
         }
 
-        .status-healthy {
-            color: #27ae60;
+        .status-open {
+            background: #fff3e0;
+            color: #f57c00;
         }
 
-        .status-sick {
-            color: #ff6b6b;
+        .status-inseminated {
+            background: #f3e5f5;
+            color: #7b1fa2;
         }
 
-        /* WhatsApp Hub */
-        .whatsapp-container {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
-            height: calc(100vh - 200px);
+        .status-confirmed {
+            background: #e8f5e9;
+            color: #388e3c;
         }
 
-        .message-list {
-            background: white;
-            border-radius: 10px;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .message-item {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .message-item:hover {
-            background: #f8f9fa;
-        }
-
-        .message-sender {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .message-preview {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .message-time {
-            color: #999;
-            font-size: 12px;
-        }
-
-        .chat-window {
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            background: #f8f9fa;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #e5ddd5;
-        }
-
-        .chat-message {
-            margin-bottom: 15px;
-            display: flex;
-        }
-
-        .chat-message.sent {
-            justify-content: flex-end;
-        }
-
-        .message-bubble {
-            max-width: 70%;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: white;
-        }
-
-        .message-bubble.sent {
-            background: #dcf8c6;
-        }
-
-        .chat-input {
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
+        .action-buttons {
             display: flex;
             gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            outline: none;
-        }
-
-        .send-btn {
+        .btn {
             padding: 10px 20px;
-            background: #25d366;
-            color: white;
             border: none;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 20px;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .chart-title {
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        /* Weather Widget */
-        .weather-widget {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 400px;
-        }
-
-        .weather-main {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .weather-temp {
-            font-size: 48px;
-            font-weight: bold;
-        }
-
-        .weather-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        /* File Upload */
-        .upload-zone {
-            background: white;
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .upload-zone:hover {
-            border-color: #27ae60;
-            background: #f8f9fa;
+        .btn-primary {
+            background: linear-gradient(135deg, #3f7f00 0%, #2d5016 100%);
+            color: white;
         }
 
-        .upload-icon {
-            font-size: 48px;
-            color: #999;
-            margin-bottom: 10px;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
         }
 
-        /* Milk Production */
-        .milk-form {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
         }
 
-        .form-row {
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .protocol-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 15px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -454,974 +270,581 @@
             flex-direction: column;
         }
 
-        .form-label {
-            font-size: 14px;
+        .form-group label {
+            font-size: 13px;
             color: #666;
             margin-bottom: 5px;
+            font-weight: 600;
         }
 
-        .form-input {
+        .form-group input,
+        .form-group select {
             padding: 8px 12px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 14px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .whatsapp-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .tab-nav-content {
-                overflow-x: auto;
-            }
-            
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
+        .timeline-container {
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
         }
 
-        /* Notifications */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #27ae60;
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            width: 2px;
+            height: 30px;
+            background: #ddd;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3f7f00;
             color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: none;
-            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
+        .timeline-content {
+            flex: 1;
         }
 
-        .notification.show {
-            display: block;
+        .timeline-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .timeline-desc {
+            font-size: 14px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .download-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .download-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #2d5016;
+            color: #2d5016;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #2d5016;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .farm-info {
+                text-align: center;
+            }
+
+            .tabs {
+                overflow-x: scroll;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-    <!-- Add Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Add this right after your <head> tag -->
-<script
-  src="https://browser.sentry-cdn.com/8.28.0/bundle.tracing.replay.min.js"
-  integrity="sha384-8w0yt/wi9Zl9pD7yd5MbKDlrQzCDLZrVU5g6j8drkJBuDshjkP3z8DqhxFo2CZpn"
-  crossorigin="anonymous"
-></script>
-
-<script>
-  Sentry.init({
-    dsn: "https://2806e1a6d46ff05e07ec8e277ee5af51@o4509882304626688.ingest.us.sentry.io/4509882348339200",
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
-      }),
-    ],
-    // Performance Monitoring
-    tracesSampleRate: 1.0,
-    // Session Replay
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
-  });
-</script>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span>🐄</span>
-                <span>ZapManejo</span>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="logo-section">
+                <span class="logo">🐂 ZapManejo</span>
+                <span style="color: #666;">Dashboard Profissional</span>
             </div>
-            <div class="ranch-info">
-                <select id="languageSelector" style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ddd; margin-right: 15px;">
-                    <option value="pt">🇧🇷 Português</option>
-                    <option value="es">🇪🇸 Español</option>
-                    <option value="en">🇺🇸 English</option>
-                </select>
-                <div class="ranch-name" id="ranchName">Fazenda Demo</div>
-                <div class="trial-timer" id="trialTimer">36:00:00 restantes</div>
+            <div class="farm-info">
+                <div class="farm-name">Fazenda Santa Helena</div>
+                <div class="farm-details">2.450 cabeças • Mato Grosso do Sul</div>
             </div>
-        </div>
-    </div>
-
-    <!-- Tab Navigation -->
-    <div class="tab-nav">
-        <div class="tab-nav-content">
-            <button class="tab-btn active" onclick="switchTab('dashboard', this)">
-                <span>📊</span>Painel
-            </button>
-            <button class="tab-btn" onclick="switchTab('inventory', this)">
-                <span>📋</span>Inventário
-            </button>
-            <button class="tab-btn" onclick="switchTab('whatsapp', this)">
-                <span>💬</span>WhatsApp
-            </button>
-            <button class="tab-btn" onclick="switchTab('analytics', this)">
-                <span>📈</span>Análises
-            </button>
-            <button class="tab-btn" onclick="switchTab('weather', this)">
-                <span>☁️</span>Clima
-            </button>
-            <button class="tab-btn" onclick="switchTab('milk', this)">
-                <span>🥛</span>Produção de Leite
-            </button>
-            <button class="tab-btn" onclick="switchTab('documents', this)">
-                <span>📁</span>Documentos
-            </button>
-        </div>
-    </div>
-
-    <!-- Dashboard Tab -->
-    <div class="tab-content active" id="dashboard-tab">
-        <!-- Demo Notice -->
-        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <strong>⚠️ Modo Demonstração</strong> - Os dados mostrados são fictícios. Quando você se tornar assinante, você poderá:
-            <ul style="margin-top: 10px; margin-left: 20px;">
-                <li>Cadastrar seus pastos reais com nomes e tamanhos personalizados</li>
-                <li>Registrar seu rebanho completo: <strong>Bovinos 🐄, Equinos 🐴, Suínos 🐷 e Ovinos 🐑</strong></li>
-                <li>Adicionar seus vaqueiros e funcionários reais</li>
-                <li>Configurar alertas personalizados e relatórios</li>
-            </ul>
-            <strong>📞 Suporte completo incluído para todos os tipos de criação!</strong>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total de Animais</div>
-                <div class="stat-value" id="totalCattle">150</div>
-                <div class="stat-change">🐄 Bovinos: 150</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Nascimentos (Mês)</div>
-                <div class="stat-value" id="birthsMonth">12</div>
-                <div class="stat-change">+2 esta semana</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Vacinações Pendentes</div>
-                <div class="stat-value" id="vaccinations">23</div>
-                <div class="stat-change">Próxima: 3 dias</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Tipos de Criação</div>
-                <div class="stat-value">4</div>
-                <div class="stat-change">🐄🐴🐷🐑 Todos suportados!</div>
+            <div class="download-buttons">
+                <button class="download-btn" onclick="downloadCSV()">📊 CSV</button>
+                <button class="download-btn" onclick="downloadPDF()">📄 PDF</button>
             </div>
         </div>
 
-        <div class="chart-card">
-            <div class="chart-title">Atividade Recente</div>
-            <div id="recentActivity">
-                <!-- Activity items will be added here -->
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('overview')">📊 Visão Geral</button>
+                <button class="tab" onclick="showTab('inventory')">🐄 Rebanho</button>
+                <button class="tab" onclick="showTab('reproduction')">🔬 Reprodução</button>
+                <button class="tab" onclick="showTab('health')">💉 Saúde</button>
+                <button class="tab" onclick="showTab('finances')">💰 Financeiro</button>
+                <button class="tab" onclick="showTab('pastures')">🌾 Pastagens</button>
+                <button class="tab" onclick="showTab('team')">👥 Equipe</button>
             </div>
         </div>
-    </div>
 
-    <!-- Inventory Tab -->
-    <div class="tab-content" id="inventory-tab">
-        <div class="inventory-controls">
-            <input type="text" class="search-box" placeholder="Buscar por brinco, raça, pasto..." id="searchInput">
-            <select class="form-input" style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px;">
-                <option>Todos os Pastos</option>
-                <option>Pasto Esperança</option>
-                <option>Pasto Vitória</option>
-                <option>Pasto Liberdade</option>
-                <option>Pasto Progresso</option>
-                <option>Pasto Horizonte</option>
-            </select>
-            <button class="filter-btn">Filtrar</button>
-            <button class="action-btn">+ Adicionar Animal</button>
-            <button class="action-btn">Exportar CSV</button>
-        </div>
-
-        <div class="inventory-table">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Brinco/ID</th>
-                            <th>Tipo</th>
-                            <th>Raça</th>
-                            <th>Sexo</th>
-                            <th>Idade</th>
-                            <th>Peso (kg)</th>
-                            <th>Pasto</th>
-                            <th>Saúde</th>
-                            <th>Última Vacinação</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody">
-                        <!-- Cattle rows will be added here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- WhatsApp Tab -->
-    <div class="tab-content" id="whatsapp-tab">
-        <div class="whatsapp-container">
-            <div class="message-list">
-                <h3 style="margin-bottom: 20px;">Mensagens Recentes</h3>
-                <div id="messageList">
-                    <!-- Messages will be listed here -->
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🐂</div>
+                    <div class="stat-value">2.450</div>
+                    <div class="stat-label">Total de Cabeças</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">Taxa de Prenhez</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚖️</div>
+                    <div class="stat-value">485kg</div>
+                    <div class="stat-label">Peso Médio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💉</div>
+                    <div class="stat-value">1.847</div>
+                    <div class="stat-label">Vacinações (Mês)</div>
                 </div>
             </div>
-            <div class="chat-window">
-                <div class="chat-header">
-                    <strong id="chatWith">Selecione uma conversa</strong>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Chat messages will appear here -->
-                </div>
-                <div class="chat-input">
-                    <input type="text" placeholder="Digite sua mensagem..." id="messageInput">
-                    <button class="send-btn" onclick="sendMessage()">Enviar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Analytics Tab -->
-    <div class="tab-content" id="analytics-tab">
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-title">Crescimento do Rebanho</div>
+            <div class="content-card">
+                <h3>📈 Indicadores de Desempenho</h3>
                 <div class="chart-container">
-                    <canvas id="growthChart"></canvas>
+                    <!-- Chart would go here -->
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">
+                        Gráfico de evolução do rebanho
+                    </div>
                 </div>
             </div>
-            <div class="chart-card">
-                <div class="chart-title">Distribuição por Pasto</div>
-                <div class="chart-container">
-                    <canvas id="pastureChart"></canvas>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="content-card">
+                <h3>🐄 Inventário do Rebanho</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Categoria</th>
+                                <th>Quantidade</th>
+                                <th>Peso Médio</th>
+                                <th>Localização</th>
+                                <th>Última Atualização</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Vacas em Lactação</td>
+                                <td>450</td>
+                                <td>520 kg</td>
+                                <td>Pasto Norte</td>
+                                <td>Hoje, 14:30</td>
+                            </tr>
+                            <tr>
+                                <td>Novilhas</td>
+                                <td>380</td>
+                                <td>350 kg</td>
+                                <td>Pasto Sul</td>
+                                <td>Hoje, 11:15</td>
+                            </tr>
+                            <tr>
+                                <td>Bezerros</td>
+                                <td>620</td>
+                                <td>180 kg</td>
+                                <td>Pasto Central</td>
+                                <td>Ontem, 16:45</td>
+                            </tr>
+                            <tr>
+                                <td>Touros</td>
+                                <td>45</td>
+                                <td>750 kg</td>
+                                <td>Pasto Reprodutores</td>
+                                <td>Hoje, 09:20</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="chart-card">
-                <div class="chart-title">Custos Mensais</div>
-                <div class="chart-container">
-                    <canvas id="costsChart"></canvas>
+        </div>
+
+        <!-- Reproduction Tab -->
+        <div id="reproduction" class="tab-content">
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openProtocolModal()">+ Novo Protocolo IATF</button>
+                <button class="btn btn-secondary">📊 Relatório Reprodutivo</button>
+                <button class="btn btn-secondary">📅 Calendário de Partos</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🤰</div>
+                    <div class="stat-value">342</div>
+                    <div class="stat-label">Vacas Prenhes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔬</div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Em Protocolo IATF</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Partos Previstos (30 dias)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">Taxa de Concepção</div>
                 </div>
             </div>
-            <div class="chart-card">
-                <div class="chart-title">Taxa de Natalidade</div>
-                <div class="chart-container">
-                    <canvas id="birthRateChart"></canvas>
+
+            <div class="content-card">
+                <h3>🔬 Protocolo de Inseminação Ativo</h3>
+                <div class="protocol-form">
+                    <div class="form-group">
+                        <label>Nome do Protocolo</label>
+                        <select>
+                            <option>IATF Convencional - Lote A</option>
+                            <option>IATF Ressincronização</option>
+                            <option>Protocolo Novilhas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data Início (D0)</label>
+                        <input type="date" value="2025-08-15">
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Animais</label>
+                        <input type="number" value="156">
+                    </div>
+                    <div class="form-group">
+                        <label>Touro/Sêmen</label>
+                        <select>
+                            <option>Touro Elite 001 - Angus</option>
+                            <option>Touro Premium 002 - Nelore</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">D0</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Implante + Benzoato</div>
+                            <div class="timeline-desc">15/08 - Colocação do implante de P4 + 2mg Benzoato de Estradiol</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">D8</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Retirada + PGF + eCG</div>
+                            <div class="timeline-desc">23/08 - Retirar implante + PGF2α + 300UI eCG</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">D9</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Benzoato de Estradiol</div>
+                            <div class="timeline-desc">24/08 - Aplicar 1mg de Benzoato</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">D10</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">IATF</div>
+                            <div class="timeline-desc">25/08 - Inseminação Artificial em Tempo Fixo (manhã)</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">D40</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Diagnóstico de Gestação</div>
+                            <div class="timeline-desc">24/09 - Ultrassonografia para confirmação</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📋 Animais em Reprodução</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Brinco</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                                <th>Protocolo</th>
+                                <th>Data IA</th>
+                                <th>Touro/Sêmen</th>
+                                <th>Previsão Parto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1234</td>
+                                <td>Vaca</td>
+                                <td><span class="status-badge status-pregnant">Prenhe</span></td>
+                                <td>IATF Conv.</td>
+                                <td>15/05/2025</td>
+                                <td>Elite 001</td>
+                                <td>22/02/2026</td>
+                            </tr>
+                            <tr>
+                                <td>#1456</td>
+                                <td>Novilha</td>
+                                <td><span class="status-badge status-inseminated">Inseminada</span></td>
+                                <td>IATF Nov.</td>
+                                <td>25/08/2025</td>
+                                <td>Premium 002</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>#1789</td>
+                                <td>Vaca</td>
+                                <td><span class="status-badge status-open">Vazia</span></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>#2001</td>
+                                <td>Vaca</td>
+                                <td><span class="status-badge status-confirmed">Confirmada</span></td>
+                                <td>IATF Ressinc.</td>
+                                <td>10/06/2025</td>
+                                <td>Elite 001</td>
+                                <td>17/03/2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Tab -->
+        <div id="health" class="tab-content">
+            <div class="content-card">
+                <h3>💉 Controle Sanitário</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Produto</th>
+                                <th>Lote</th>
+                                <th>Quantidade</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>22/08/2025</td>
+                                <td>Vacinação</td>
+                                <td>Aftosa</td>
+                                <td>Lote C</td>
+                                <td>450</td>
+                                <td>João Silva</td>
+                            </tr>
+                            <tr>
+                                <td>20/08/2025</td>
+                                <td>Vermifugação</td>
+                                <td>Ivermectina</td>
+                                <td>Bezerros</td>
+                                <td>280</td>
+                                <td>Pedro Santos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finances Tab -->
+        <div id="finances" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">R$ 485.750</div>
+                    <div class="stat-label">Receita (Mês)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📉</div>
+                    <div class="stat-value">R$ 127.340</div>
+                    <div class="stat-label">Despesas (Mês)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">R$ 358.410</div>
+                    <div class="stat-label">Lucro Líquido</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">R$ 198/cab</div>
+                    <div class="stat-label">Custo por Cabeça</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pastures Tab -->
+        <div id="pastures" class="tab-content">
+            <div class="content-card">
+                <h3>🌾 Gestão de Pastagens</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pasto</th>
+                                <th>Área (ha)</th>
+                                <th>Tipo</th>
+                                <th>Animais</th>
+                                <th>Taxa Lotação</th>
+                                <th>Último Manejo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Pasto Norte</td>
+                                <td>450</td>
+                                <td>Brachiaria</td>
+                                <td>450</td>
+                                <td>1.0 UA/ha</td>
+                                <td>15/08/2025</td>
+                            </tr>
+                            <tr>
+                                <td>Pasto Sul</td>
+                                <td>380</td>
+                                <td>Mombaça</td>
+                                <td>380</td>
+                                <td>1.0 UA/ha</td>
+                                <td>10/08/2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Tab -->
+        <div id="team" class="tab-content">
+            <div class="content-card">
+                <h3>👥 Equipe de Vaqueiros</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Função</th>
+                                <th>WhatsApp</th>
+                                <th>Área</th>
+                                <th>Atividades (Mês)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>João Silva</td>
+                                <td>Capataz</td>
+                                <td>+55 67 99999-1234</td>
+                                <td>Geral</td>
+                                <td>127</td>
+                            </tr>
+                            <tr>
+                                <td>Pedro Santos</td>
+                                <td>Vaqueiro</td>
+                                <td>+55 67 99999-5678</td>
+                                <td>Pasto Norte</td>
+                                <td>89</td>
+                            </tr>
+                            <tr>
+                                <td>Carlos Oliveira</td>
+                                <td>Vaqueiro</td>
+                                <td>+55 67 99999-9012</td>
+                                <td>Pasto Sul</td>
+                                <td>76</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Weather Tab -->
-    <div class="tab-content" id="weather-tab">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <input type="text" id="cityInput" placeholder="Digite a cidade... (ex: Cuiabá, MT)" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ddd;">
-            <button onclick="getWeather()" class="action-btn" style="margin-left: 10px;">Buscar Clima</button>
-        </div>
-        
-        <div class="weather-widget">
-            <h2>Clima - <span id="weatherLocation">Fazenda Demo</span></h2>
-            <div class="weather-main">
-                <div class="weather-temp" id="temperature">--°C</div>
-                <div>
-                    <div id="weatherDescription">Aguardando busca...</div>
-                    <div id="cityName">Digite uma cidade</div>
-                </div>
-            </div>
-            <div class="weather-details">
-                <div>
-                    <div>Umidade</div>
-                    <div id="humidity">--%</div>
-                </div>
-                <div>
-                    <div>Vento</div>
-                    <div id="windSpeed">-- km/h</div>
-                </div>
-                <div>
-                    <div>Sensação</div>
-                    <div id="feelsLike">--°C</div>
-                </div>
-                <div>
-                    <div>Pressão</div>
-                    <div id="pressure">-- hPa</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="chart-card" style="margin-top: 20px;">
-            <div class="chart-title">Alertas para Pecuaristas</div>
-            <div id="ranchTip" style="padding: 20px; font-size: 16px; line-height: 1.5;">
-                Digite uma cidade para ver alertas baseados no clima.
-            </div>
-        </div>
-    </div>
-
-    <!-- Milk Production Tab -->
-    <div class="tab-content" id="milk-tab">
-        <div class="milk-form">
-            <h3>Registrar Produção de Leite</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Data</label>
-                    <input type="date" class="form-input" id="milkDate">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Vaca ID</label>
-                    <input type="text" class="form-input" placeholder="Ex: VAC001">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Litros (Manhã)</label>
-                    <input type="number" class="form-input" placeholder="0.0">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Litros (Tarde)</label>
-                    <input type="number" class="form-input" placeholder="0.0">
-                </div>
-            </div>
-            <button class="action-btn">Registrar Produção</button>
-        </div>
-        
-        <div class="chart-card">
-            <div class="chart-title">Produção Mensal</div>
-            <div class="chart-container">
-                <canvas id="milkChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Documents Tab -->
-    <div class="tab-content" id="documents-tab">
-        <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">📤</div>
-            <h3>Arraste arquivos aqui ou clique para fazer upload</h3>
-            <p>Aceita CSV, Excel, PDF, Imagens</p>
-            <input type="file" id="fileInput" style="display: none;" multiple accept=".csv,.xlsx,.xls,.pdf,.jpg,.png">
-        </div>
-        
-        <div class="inventory-table" style="margin-top: 20px;">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome do Arquivo</th>
-                            <th>Tipo</th>
-                            <th>Tamanho</th>
-                            <th>Data de Upload</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="documentsTableBody">
-                        <tr>
-                            <td>inventario_janeiro_2024.csv</td>
-                            <td>CSV</td>
-                            <td>24 KB</td>
-                            <td>15/01/2024</td>
-                            <td><button class="action-btn">Baixar</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification -->
-    <div class="notification" id="notification"></div>
 
     <script>
-        // Update language function
-        function updateLanguage() {
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                const tabName = btn.getAttribute('onclick').match(/switchTab\('(\w+)'/)[1];
-                const mapping = {
-                    dashboard: t.panel,
-                    inventory: t.inventory,
-                    whatsapp: t.whatsapp,
-                    analytics: t.analytics,
-                    weather: t.weather,
-                    milk: t.milk,
-                    documents: t.documents
-                };
-                btn.innerHTML = btn.innerHTML.replace(/>.*<\/span>/, `>${btn.querySelector('span').textContent}</span>`) + mapping[tabName];
-            });
-            
-            // Update demo notice
-            const demoNotice = document.querySelector('#dashboard-tab > div');
-            if (demoNotice && demoNotice.style.background === 'rgb(255, 243, 205)') {
-                demoNotice.innerHTML = `
-                    <strong>${t.demoWarning}</strong> - ${t.demoText}
-                    <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li>${t.demoBenefit1}</li>
-                        <li>${t.demoBenefit2}</li>
-                        <li>${t.demoBenefit3}</li>
-                        <li>${t.demoBenefit4}</li>
-                    </ul>
-                    <strong>${t.demoSupport}</strong>
-                `;
-            }
-            
-            // Update stat cards
-            const statLabels = document.querySelectorAll('.stat-label');
-            if (statLabels.length >= 4) {
-                statLabels[0].textContent = t.totalAnimals;
-                statLabels[1].textContent = t.monthBirths;
-                statLabels[2].textContent = t.pendingVaccinations;
-                statLabels[3].textContent = t.animalTypes;
-            }
-            
-            // Update inventory
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            const filterBtn = document.querySelector('.filter-btn');
-            if (filterBtn) filterBtn.textContent = t.filter;
-            
-            // Update table headers
-            const thElements = document.querySelectorAll('#inventory-tab th');
-            const headerTexts = [t.tag, t.type, t.breed, t.gender, t.age, t.weight, t.pasture, t.health, t.lastVaccination, t.actions];
-            thElements.forEach((th, index) => {
-                if (headerTexts[index]) th.textContent = headerTexts[index];
-            });
-            
-            // Update WhatsApp tab
-            const messageListTitle = document.querySelector('#whatsapp-tab h3');
-            if (messageListTitle) messageListTitle.textContent = t.recentMessages;
-            document.getElementById('chatWith').textContent = t.selectConversation;
-            document.getElementById('messageInput').placeholder = t.typeMessage;
-            const sendBtn = document.querySelector('.send-btn');
-            if (sendBtn) sendBtn.textContent = t.send;
-            
-            // Update Weather tab
-            document.getElementById('cityInput').placeholder = t.searchCity;
-            const weatherBtn = document.querySelector('#weather-tab .action-btn');
-            if (weatherBtn) weatherBtn.textContent = t.searchWeather;
-            document.getElementById('weatherDescription').textContent = t.waitingSearch;
-            document.getElementById('cityName').textContent = t.enterCity;
-            
-            // Update chart titles
-            const chartTitles = document.querySelectorAll('.chart-title');
-            const chartTitleTexts = [t.recentActivity, t.herdGrowth, t.distributionByPasture, t.monthlyCosts, t.birthRate, t.monthlyProduction];
-            chartTitles.forEach((title, index) => {
-                if (chartTitleTexts[index]) title.textContent = chartTitleTexts[index];
-            });
-            
-            // Update Milk Production tab
-            const milkTitle = document.querySelector('#milk-tab h3');
-            if (milkTitle) milkTitle.textContent = t.registerProduction;
-            
-            // Update Documents tab
-            const uploadZone = document.querySelector('.upload-zone');
-            if (uploadZone) {
-                uploadZone.querySelector('h3').textContent = t.dragFiles;
-                uploadZone.querySelector('p').textContent = t.acceptedFormats;
-            }
-        }
-
-        // Demo data
-        let demoData = {
-            ranchName: 'Fazenda Demo',
-            totalCattle: 150,
-            birthsMonth: 12,
-            vaccinations: 23,
-            cattle: [],
-            messages: [],
-            activities: [],
-            charts: {}
-        };
-
-        // Generate demo cattle
-        function generateDemoCattle() {
-            const breeds = ['Nelore', 'Angus', 'Brahman', 'Gir', 'Guzerá'];
-            const pastures = ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'];
-            
-            demoData.cattle = [];
-            for (let i = 1; i <= 150; i++) {
-                demoData.cattle.push({
-                    tag: `BOV${String(i).padStart(3, '0')}`,
-                    type: 'Bovino',
-                    breed: breeds[Math.floor(Math.random() * breeds.length)],
-                    gender: Math.random() > 0.5 ? 'Macho' : 'Fêmea',
-                    age: Math.floor(Math.random() * 60) + 6,
-                    weight: Math.floor(Math.random() * 300) + 300,
-                    pasture: pastures[Math.floor(Math.random() * pastures.length)],
-                    health: Math.random() > 0.9 ? 'Em Tratamento' : 'Saudável',
-                    lastVaccine: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')
-                });
-            }
-        }
-
-        // Generate demo messages
-        function generateDemoMessages() {
-            const vaqueiros = ['João Santos', 'Pedro Silva', 'Carlos Oliveira', 'Miguel Costa', 'José Ferreira'];
-            const messages = [
-                'Nasceu 2 bezerros hoje no pasto norte',
-                'Vacinei o lote 15 contra aftosa',
-                'Transferi 30 cabeças para o pasto sul',
-                'Chuva de 25mm registrada',
-                'Peso da vaca 501: 420kg'
-            ];
-            
-            demoData.messages = [];
-            for (let i = 0; i < 10; i++) {
-                demoData.messages.push({
-                    sender: vaqueiros[Math.floor(Math.random() * vaqueiros.length)],
-                    message: messages[Math.floor(Math.random() * messages.length)],
-                    time: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000),
-                    phone: `+55 65 9${Math.floor(Math.random() * 10000000 + 10000000)}`
-                });
-            }
-        }
-
-        // Switch tabs - FIXED VERSION
-        function switchTab(tabName, button) {
+        function showTab(tabName) {
             // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
             
-            // Remove active from all buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
             
             // Show selected tab
-            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
             
-            // Mark button as active
-            button.classList.add('active');
-            
-            // Load tab-specific data
-            if (tabName === 'inventory') {
-                loadInventory();
-            } else if (tabName === 'whatsapp') {
-                loadMessages();
-            } else if (tabName === 'analytics') {
-                // IMPORTANT: Initialize charts when analytics tab is opened
-                setTimeout(() => initAnalyticsCharts(), 100);
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function downloadCSV() {
+            alert('Preparando download do inventário em formato CSV...\nEsta funcionalidade será implementada na versão completa.');
+        }
+
+        function downloadPDF() {
+            alert('Preparando relatório em PDF...\nEsta funcionalidade será implementada na versão completa.');
+        }
+
+        function openProtocolModal() {
+            alert('Abrindo formulário para novo protocolo IATF...\nEsta funcionalidade será implementada na versão completa.');
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const activities = document.querySelector('#overview .stat-value');
+            if (activities) {
+                const current = parseInt(activities.textContent.replace('.', ''));
+                activities.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString('pt-BR');
             }
-        }
-
-        // Load inventory
-        function loadInventory() {
-            const tbody = document.getElementById('inventoryTableBody');
-            tbody.innerHTML = '';
-            
-            demoData.cattle.forEach(animal => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><span class="tag-badge">${animal.tag}</span></td>
-                    <td>${animal.type}</td>
-                    <td>${animal.breed}</td>
-                    <td>${animal.gender}</td>
-                    <td>${animal.age} meses</td>
-                    <td>${animal.weight}</td>
-                    <td>${animal.pasture}</td>
-                    <td class="${animal.health === 'Saudável' ? 'status-healthy' : 'status-sick'}">${animal.health}</td>
-                    <td>${animal.lastVaccine}</td>
-                    <td><button class="action-btn">Editar</button></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Load WhatsApp messages
-        function loadMessages() {
-            const messageList = document.getElementById('messageList');
-            messageList.innerHTML = '';
-            
-            demoData.messages.sort((a, b) => b.time - a.time).forEach(msg => {
-                const item = document.createElement('div');
-                item.className = 'message-item';
-                item.onclick = () => openChat(msg.sender, msg.phone);
-                item.innerHTML = `
-                    <div class="message-sender">${msg.sender}</div>
-                    <div class="message-preview">${msg.message}</div>
-                    <div class="message-time">${msg.time.toLocaleString('pt-BR')}</div>
-                `;
-                messageList.appendChild(item);
-            });
-        }
-
-        // Open chat
-        function openChat(sender, phone) {
-            document.getElementById('chatWith').textContent = `${sender} - ${phone}`;
-            document.getElementById('chatMessages').innerHTML = `
-                <div class="chat-message">
-                    <div class="message-bubble">Olá! Como está o gado hoje?</div>
-                </div>
-                <div class="chat-message sent">
-                    <div class="message-bubble sent">Tudo bem! Nasceu 2 bezerros hoje.</div>
-                </div>
-            `;
-        }
-
-        // Send message
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (message) {
-                const chatMessages = document.getElementById('chatMessages');
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'chat-message sent';
-                msgDiv.innerHTML = `<div class="message-bubble sent">${message}</div>`;
-                chatMessages.appendChild(msgDiv);
-                input.value = '';
-                
-                // Simulate response
-                setTimeout(() => {
-                    const responseDiv = document.createElement('div');
-                    responseDiv.className = 'chat-message';
-                    responseDiv.innerHTML = `<div class="message-bubble">✅ Mensagem recebida e processada!</div>`;
-                    chatMessages.appendChild(responseDiv);
-                    showNotification('Mensagem enviada via WhatsApp!');
-                }, 1000);
-            }
-        }
-
-        // Show notification
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Trial timer
-        function updateTrialTimer() {
-            const endTime = new Date(Date.now() + 36 * 60 * 60 * 1000);
-            
-            setInterval(() => {
-                const now = new Date();
-                const remaining = endTime - now;
-                
-                if (remaining > 0) {
-                    const hours = Math.floor(remaining / (1000 * 60 * 60));
-                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                    
-                    document.getElementById('trialTimer').textContent = 
-                        `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} restantes`;
-                }
-            }, 1000);
-        }
-
-        // Initialize Analytics Charts - FIXED VERSION
-        function initAnalyticsCharts() {
-            // Destroy existing charts if they exist
-            Object.values(demoData.charts).forEach(chart => {
-                if (chart) chart.destroy();
-            });
-            
-            // Growth Chart
-            const growthCtx = document.getElementById('growthChart');
-            if (growthCtx) {
-                demoData.charts.growth = new Chart(growthCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                        datasets: [{
-                            label: 'Total de Animais',
-                            data: [120, 125, 130, 138, 145, 150],
-                            borderColor: '#27ae60',
-                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Pasture Distribution Chart
-            const pastureCtx = document.getElementById('pastureChart');
-            if (pastureCtx) {
-                demoData.charts.pasture = new Chart(pastureCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Pasto Esperança', 'Pasto Vitória', 'Pasto Liberdade', 'Pasto Progresso', 'Pasto Horizonte'],
-                        datasets: [{
-                            data: [35, 28, 25, 32, 30],
-                            backgroundColor: ['#27ae60', '#2ecc71', '#16a085', '#1abc9c', '#3498db']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Costs Chart
-            const costsCtx = document.getElementById('costsChart');
-            if (costsCtx) {
-                demoData.charts.costs = new Chart(costsCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Ração', 'Veterinário', 'Vacinas', 'Manutenção', 'Transporte'],
-                        datasets: [{
-                            label: 'Custos (R$)',
-                            data: [4500, 2200, 1800, 3200, 1500],
-                            backgroundColor: '#e74c3c'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return 'R$ ' + value.toLocaleString('pt-BR');
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Birth Rate Chart
-            const birthCtx = document.getElementById('birthRateChart');
-            if (birthCtx) {
-                demoData.charts.birthRate = new Chart(birthCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                        datasets: [{
-                            label: 'Nascimentos',
-                            data: [8, 12, 10, 15, 11, 12],
-                            borderColor: '#9b59b6',
-                            backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'bottom'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Milk Production Chart
-            const milkCtx = document.getElementById('milkChart');
-            if (milkCtx) {
-                demoData.charts.milk = new Chart(milkCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                        datasets: [{
-                            label: 'Litros de Leite',
-                            data: [850, 920, 890, 940],
-                            backgroundColor: '#3498db'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return value + ' L';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        // Weather functions
-        function getWeather() {
-            const city = document.getElementById('cityInput').value;
-            if (!city) {
-                alert('Por favor, digite o nome de uma cidade');
-                return;
-            }
-            
-            // Show loading state
-            document.getElementById('temperature').textContent = '...';
-            document.getElementById('weatherDescription').textContent = 'Buscando...';
-            
-            // Get coordinates for Brazilian city
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city},Brazil&limit=1`)
-                .then(response => response.json())
-                .then(locationData => {
-                    if (locationData.length === 0) {
-                        alert('Cidade não encontrada. Tente: Cuiabá, Campo Grande, Goiânia');
-                        document.getElementById('temperature').textContent = '--°C';
-                        return;
-                    }
-                    
-                    const lat = locationData[0].lat;
-                    const lon = locationData[0].lon;
-                    const displayName = locationData[0].display_name.split(',')[0];
-                    
-                    // Get REAL weather from Open-Meteo
-                    return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,apparent_temperature&timezone=America/Sao_Paulo`)
-                        .then(response => response.json())
-                        .then(weatherData => {
-                            // Update display with REAL data
-                            document.getElementById('temperature').textContent = Math.round(weatherData.current.temperature_2m) + '°C';
-                            document.getElementById('weatherDescription').textContent = getWeatherDescription(weatherData.current.weather_code);
-                            document.getElementById('cityName').textContent = displayName + ', Brasil';
-                            document.getElementById('humidity').textContent = weatherData.current.relative_humidity_2m + '%';
-                            document.getElementById('windSpeed').textContent = Math.round(weatherData.current.wind_speed_10m) + ' km/h';
-                            document.getElementById('feelsLike').textContent = Math.round(weatherData.current.apparent_temperature) + '°C';
-                            document.getElementById('pressure').textContent = '1013 hPa';
-                            
-                            // Generate ranch alerts
-                            generateRanchAlerts(weatherData.current);
-                        });
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    document.getElementById('temperature').textContent = '--°C';
-                    document.getElementById('weatherDescription').textContent = 'Erro';
-                });
-        }
-
-        // Convert weather codes to Portuguese
-        function getWeatherDescription(code) {
-            const descriptions = {
-                0: 'Céu limpo ☀️',
-                1: 'Principalmente limpo 🌤️', 
-                2: 'Parcialmente nublado ⛅',
-                3: 'Nublado ☁️',
-                45: 'Neblina 🌫️',
-                48: 'Geada ❄️',
-                51: 'Garoa leve 🌦️',
-                61: 'Chuva leve 🌧️',
-                63: 'Chuva moderada 🌧️',
-                65: 'Chuva forte 🌧️',
-                80: 'Pancadas 🌦️',
-                95: 'Tempestade ⛈️'
-            };
-            return descriptions[code] || 'Variável';
-        }
-
-        // Ranch-specific alerts
-        function generateRanchAlerts(current) {
-            const temp = current.temperature_2m;
-            const humidity = current.relative_humidity_2m;
-            
-            let tip = '';
-            
-            if (temp > 35) {
-                tip = '🔥 ALERTA CALOR EXTREMO! Garanta água abundante e sombra. Evite manejo entre 10h-16h.';
-            } else if (temp < 10) {
-                tip = '❄️ FRIO INTENSO! Forneça alimentação extra. Proteja bezerros.';
-            } else if (humidity > 85 && temp > 25) {
-                tip = '🦟 RISCO PARASITAS! Alta umidade favorece carrapatos. Intensifique monitoramento.';
-            } else if (temp >= 20 && temp <= 28 && humidity >= 50 && humidity <= 70) {
-                tip = '✅ CONDIÇÕES PERFEITAS! Ideal para vacinação, pesagem e manejo geral.';
-            } else {
-                tip = '👍 Condições normais para manejo do rebanho.';
-            }
-            
-            document.getElementById('ranchTip').innerHTML = `<strong>${tip}</strong>`;
-        }
-
-        // Initialize everything
-        window.onload = function() {
-            generateDemoCattle();
-            generateDemoMessages();
-            updateTrialTimer();
-            
-            // Search inventory
-            document.getElementById('searchInput')?.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#inventoryTableBody tr');
-                
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            });
-
-            // File upload
-            document.getElementById('fileInput')?.addEventListener('change', (e) => {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    showNotification(`${files.length} arquivo(s) carregado(s) com sucesso!`);
-                }
-            });
-            
-            // Enter key for message input
-            document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-            
-            // Simulate incoming messages
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    const activities = [
-                        '🐄 Nascimento registrado via WhatsApp',
-                        '💉 Vacinação registrada via WhatsApp',
-                        '🚚 Movimentação de gado registrada',
-                        '🌧️ Precipitação registrada: 15mm'
-                    ];
-                    
-                    const activity = activities[Math.floor(Math.random() * activities.length)];
-                    showNotification(activity);
-                }
-            }, 15000);
-        };
+        }, 5000);
     </script>
 </body>
 </html>
