@@ -1,0 +1,5 @@
+{
+  "success": "Éxito",
+  "error": "Error interno del servidor",
+  "unauthorized": "No autorizado"
+}
