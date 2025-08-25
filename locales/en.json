@@ -1,0 +1,5 @@
+{
+  "success": "Success",
+  "error": "Internal server error",
+  "unauthorized": "Unauthorized"
+}
