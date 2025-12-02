@@ -3,389 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZapManejo Dashboard - Gestão Pecuária Profissional</title>
+    <title data-pt="ZapManejo Dashboard - Gestão Pecuária Profissional" 
+           data-en="ZapManejo Dashboard - Professional Cattle Management">
+        ZapManejo Dashboard
+    </title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
+        .dashboard-container { max-width: 1400px; margin: 0 auto; }
         .dashboard-header {
-            background: white;
-            border-radius: 12px;
-            padding: 20px 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
+            background: white; border-radius: 12px; padding: 20px 30px; margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between;
+            align-items: center; gap: 20px; flex-wrap: wrap;
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2d5016;
-        }
-
-        .download-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { font-size: 28px; font-weight: bold; color: #2d5016; }
+        .download-buttons { display: flex; gap: 10px; }
         .download-btn {
-            padding: 8px 16px;
-            background: white;
-            border: 2px solid #2d5016;
-            color: #2d5016;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 8px 16px; background: white; border: 2px solid #2d5016; color: #2d5016;
+            border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
             transition: all 0.3s ease;
         }
+        .download-btn:hover { background: #2d5016; color: white; }
+        .farm-info { text-align: right; }
+        .farm-name { font-size: 18px; font-weight: 600; color: #333; }
+        .farm-details { font-size: 14px; color: #666; margin-top: 5px; }
 
-        .download-btn:hover {
-            background: #2d5016;
-            color: white;
+        /* Language Toggle */
+        .lang-toggle {
+            display: flex; gap: 8px; background: #f0f0f0; padding: 4px; border-radius: 20px;
+            font-size: 13px;
         }
-
-        .farm-info {
-            text-align: right;
+        .lang-btn {
+            padding: 6px 12px; border-radius: 16px; cursor: pointer; transition: all 0.3s;
         }
-
-        .farm-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .farm-details {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
+        .lang-btn.active { background: #2d5016; color: white; font-weight: bold; }
 
         .tabs-container {
-            background: white;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 20px;
+            background: white; border-radius: 12px; padding: 10px; margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-        }
-
+        .tabs { display: flex; gap: 10px; overflow-x: auto; }
         .tab {
-            padding: 12px 24px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            color: #666;
-            white-space: nowrap;
+            padding: 12px 24px; background: #f0f0f0; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 15px; font-weight: 500; color: #666; white-space: nowrap;
             transition: all 0.3s ease;
         }
-
-        .tab:hover {
-            background: #e0e0e0;
-        }
-
+        .tab:hover { background: #e0e0e0; }
         .tab.active {
             background: linear-gradient(135deg, #3f7f00 0%, #2d5016 100%);
             color: white;
         }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; margin-bottom: 30px;
         }
-
         .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            background: white; border-radius: 12px; padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;
         }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #2d5016;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-icon { font-size: 24px; margin-bottom: 10px; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #2d5016; margin-bottom: 5px; }
+        .stat-label { font-size: 14px; color: #666; }
 
         .content-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background: white; border-radius: 12px; padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px;
         }
-
         .content-card h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #333; margin-bottom: 20px; font-size: 20px;
+            display: flex; align-items: center; gap: 10px;
         }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
         th {
-            background: #f5f5f5;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0;
+            background: #f5f5f5; padding: 12px; text-align: left; font-weight: 600;
+            color: #333; border-bottom: 2px solid #e0e0e0;
         }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        tr:hover {
-            background: #fafafa;
-        }
+        td { padding: 12px; border-bottom: 1px solid #e0e0e0; }
+        tr:hover { background: #fafafa; }
 
         .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600;
         }
+        .status-pregnant { background: #e3f2fd; color: #1976d2; }
+        .status-open { background: #fff3e0; color: #f57c00; }
+        .status-inseminated { background: #f3e5f5; color: #7b1fa2; }
+        .status-confirmed { background: #e8f5e9; color: #388e3c; }
 
-        .status-pregnant {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .status-open {
-            background: #fff3e0;
-            color: #f57c00;
-        }
-
-        .status-inseminated {
-            background: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .status-confirmed {
-            background: #e8f5e9;
-            color: #388e3c;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #3f7f00 0%, #2d5016 100%);
             color: white;
         }
-
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
+            transform: translateY(-2px); box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
         }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+        .btn-secondary:hover { background: #e0e0e0; }
 
         .protocol-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; padding: 20px; background: #f9f9f9; border-radius: 8px; margin-bottom: 20px;
         }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
+        .form-group { display: flex; flex-direction: column; }
         .form-group label {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-            font-weight: 600;
+            font-size: 13px; color: #666; margin-bottom: 5px; font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;
         }
 
-        .form-group input,
-        .form-group select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .timeline-container {
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-
+        .timeline-container { padding: 20px; background: #f9f9f9; border-radius: 8px; }
         .timeline-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            position: relative;
+            display: flex; align-items: center; margin-bottom: 15px; position: relative;
         }
-
         .timeline-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 40px;
-            width: 2px;
-            height: 30px;
-            background: #ddd;
+            content: ''; position: absolute; left: 20px; top: 40px;
+            width: 2px; height: 30px; background: #ddd;
         }
-
         .timeline-marker {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #3f7f00;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
+            width: 40px; height: 40px; border-radius: 50%; background: #3f7f00;
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; margin-right: 15px;
         }
-
-        .timeline-content {
-            flex: 1;
-        }
-
-        .timeline-title {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .timeline-desc {
-            font-size: 14px;
-            color: #666;
-            margin-top: 3px;
-        }
+        .timeline-content { flex: 1; }
+        .timeline-title { font-weight: 600; color: #333; }
+        .timeline-desc { font-size: 14px; color: #666; margin-top: 3px; }
 
         .chart-container {
-            height: 300px;
-            position: relative;
+            height: 300px; position: relative;
         }
-
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .farm-info {
-                text-align: center;
-            }
-
-            .download-buttons {
-                order: -1;
-            }
-
-            .tabs {
-                overflow-x: scroll;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .dashboard-header { flex-direction: column; text-align: center; }
+            .farm-info { text-align: center; }
+            .download-buttons { order: -1; }
         }
     </style>
 </head>
@@ -394,111 +161,114 @@
         <!-- Header -->
         <div class="dashboard-header">
             <div class="logo-section">
-                <span class="logo">🐂 ZapManejo</span>
-                <span style="color: #666;">Dashboard Profissional</span>
+                <span class="logo">ZapManejo</span>
+                <span data-pt="Dashboard Profissional" data-en="Professional Dashboard" style="color: #666;">Dashboard Profissional</span>
             </div>
-            <div class="download-buttons">
-                <button class="download-btn" onclick="downloadCSV()">📊 CSV</button>
-                <button class="download-btn" onclick="downloadPDF()">📄 PDF</button>
+
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div class="download-buttons">
+                    <button class="download-btn" onclick="downloadCSV()">CSV</button>
+                    <button class="download-btn" onclick="downloadPDF()">PDF</button>
+                </div>
+                <div class="lang-toggle">
+                    <div class="lang-btn active" data-lang="pt">PT</div>
+                    <div class="lang-btn" data-lang="en">EN</div>
+                </div>
             </div>
+
             <div class="farm-info">
-                <div class="farm-name">Fazenda Santa Helena</div>
-                <div class="farm-details">2.450 cabeças • Mato Grosso do Sul</div>
+                <div class="farm-name" data-pt="Fazenda Santa Helena" data-en="Santa Helena Ranch">Fazenda Santa Helena</div>
+                <div class="farm-details" data-pt="2.450 cabeças • Mato Grosso do Sul" data-en="2,450 head • Mato Grosso do Sul">2.450 cabeças • Mato Grosso do Sul</div>
             </div>
         </div>
 
         <!-- Tabs -->
         <div class="tabs-container">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('overview')">📊 Visão Geral</button>
-                <button class="tab" onclick="showTab('inventory')">🐄 Rebanho</button>
-                <button class="tab" onclick="showTab('reproduction')">🔬 Reprodução</button>
-                <button class="tab" onclick="showTab('health')">💉 Saúde</button>
-                <button class="tab" onclick="showTab('finances')">💰 Financeiro</button>
-                <button class="tab" onclick="showTab('pastures')">🌾 Pastagens</button>
-                <button class="tab" onclick="showTab('team')">👥 Equipe</button>
+                <button class="tab active" onclick="showTab('overview')" data-pt="Visão Geral" data-en="Overview">Visão Geral</button>
+                <button class="tab" onclick="showTab('inventory')" data-pt="Rebanho" data-en="Herd">Rebanho</button>
+                <button class="tab" onclick="showTab('reproduction')" data-pt="Reprodução" data-en="Reproduction">Reprodução</button>
+                <button class="tab" onclick="showTab('health')" data-pt="Saúde" data-en="Health">Saúde</button>
+                <button class="tab" onclick="showTab('finances')" data-pt="Financeiro" data-en="Finances">Financeiro</button>
+                <button class="tab" onclick="showTab('pastures')" data-pt="Pastagens" data-en="Pastures">Pastagens</button>
+                <button class="tab" onclick="showTab('team')" data-pt="Equipe" data-en="Team">Equipe</button>
             </div>
         </div>
 
-        <!-- Overview Tab -->
+        <!-- Overview -->
         <div id="overview" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">🐂</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">2.450</div>
-                    <div class="stat-label">Total de Cabeças</div>
+                    <div class="stat-label" data-pt="Total de Cabeças" data-en="Total Head">Total de Cabeças</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">📈</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">87%</div>
-                    <div class="stat-label">Taxa de Prenhez</div>
+                    <div class="stat-label" data-pt="Taxa de Prenhez" data-en="Pregnancy Rate">Taxa de Prenhez</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">⚖️</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">485kg</div>
-                    <div class="stat-label">Peso Médio</div>
+                    <div class="stat-label" data-pt="Peso Médio" data-en="Average Weight">Peso Médio</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💉</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">1.847</div>
-                    <div class="stat-label">Vacinações (Mês)</div>
+                    <div class="stat-label" data-pt="Vacinações (Mês)" data-en="Vaccinations (Month)">Vacinações (Mês)</div>
                 </div>
             </div>
-
             <div class="content-card">
-                <h3>📈 Indicadores de Desempenho</h3>
+                <h3 data-pt="Indicadores de Desempenho" data-en="Performance Indicators">Indicadores de Desempenho</h3>
                 <div class="chart-container">
-                    <!-- Chart would go here -->
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">
+                    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;"
+                         data-pt="Gráfico de evolução do rebanho" data-en="Herd growth chart">
                         Gráfico de evolução do rebanho
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Inventory Tab -->
+        <!-- Inventory -->
         <div id="inventory" class="tab-content">
             <div class="content-card">
-                <h3>🐄 Inventário do Rebanho</h3>
+                <h3 data-pt="Inventário do Rebanho" data-en="Herd Inventory">Inventário do Rebanho</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Categoria</th>
-                                <th>Quantidade</th>
-                                <th>Peso Médio</th>
-                                <th>Localização</th>
-                                <th>Última Atualização</th>
+                                <th data-pt="Categoria" data-en="Category">Categoria</th>
+                                <th data-pt="Quantidade" data-en="Quantity">Quantidade</th>
+                                <th data-pt="Peso Médio" data-en="Avg. Weight">Peso Médio</th>
+                                <th data-pt="Localização" data-en="Location">Localização</th>
+                                <th data-pt="Última Atualização" data-en="Last Update">Última Atualização</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Vacas em Lactação</td>
-                                <td>450</td>
-                                <td>520 kg</td>
-                                <td>Pasto Norte</td>
-                                <td>Hoje, 14:30</td>
+                                <td data-pt="Vacas em Lactação" data-en="Lactating Cows">Vacas em Lactação</td>
+                                <td>450</td><td>520 kg</td>
+                                <td data-pt="Pasto Norte" data-en="North Pasture">Pasto Norte</td>
+                                <td data-pt="Hoje, 14:30" data-en="Today, 14:30">Hoje, 14:30</td>
                             </tr>
                             <tr>
-                                <td>Novilhas</td>
-                                <td>380</td>
-                                <td>350 kg</td>
-                                <td>Pasto Sul</td>
-                                <td>Hoje, 11:15</td>
+                                <td data-pt="Novilhas" data-en="Heifers">Novilhas</td>
+                                <td>380</td><td>350 kg</td>
+                                <td data-pt="Pasto Sul" data-en="South Pasture">Pasto Sul</td>
+                                <td data-pt="Hoje, 11:15" data-en="Today, 11:15">Hoje, 11:15</td>
                             </tr>
                             <tr>
-                                <td>Bezerros</td>
-                                <td>620</td>
-                                <td>180 kg</td>
-                                <td>Pasto Central</td>
-                                <td>Ontem, 16:45</td>
+                                <td data-pt="Bezerros" data-en="Calves">Bezerros</td>
+                                <td>620</td><td>180 kg</td>
+                                <td data-pt="Pasto Central" data-en="Central Pasture">Pasto Central</td>
+                                <td data-pt="Ontem, 16:45" data-en="Yesterday, 16:45">Ontem, 16:45</td>
                             </tr>
                             <tr>
-                                <td>Touros</td>
-                                <td>45</td>
-                                <td>750 kg</td>
-                                <td>Pasto Reprodutores</td>
-                                <td>Hoje, 09:20</td>
+                                <td data-pt="Touros" data-en="Bulls">Touros</td>
+                                <td>45</td><td>750 kg</td>
+                                <td data-pt="Pasto Reprodutores" data-en="Breeding Pasture">Pasto Reprodutores</td>
+                                <td data-pt="Hoje, 09:20" data-en="Today, 09:20">Hoje, 09:20</td>
                             </tr>
                         </tbody>
                     </table>
@@ -506,61 +276,61 @@
             </div>
         </div>
 
-        <!-- Reproduction Tab -->
+        <!-- Reproduction -->
         <div id="reproduction" class="tab-content">
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="openProtocolModal()">+ Novo Protocolo IATF</button>
-                <button class="btn btn-secondary">📊 Relatório Reprodutivo</button>
-                <button class="btn btn-secondary">📅 Calendário de Partos</button>
+                <button class="btn btn-primary" onclick="openProtocolModal()" 
+                        data-pt="+ Novo Protocolo IATF" data-en="+ New IATF Protocol">+ Novo Protocolo IATF</button>
+                <button class="btn btn-secondary" data-pt="Relatório Reprodutivo" data-en="Reproductive Report">Relatório Reprodutivo</button>
+                <button class="btn btn-secondary" data-pt="Calendário de Partos" data-en="Calving Calendar">Calendário de Partos</button>
             </div>
-
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">🤰</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">342</div>
-                    <div class="stat-label">Vacas Prenhes</div>
+                    <div class="stat-label" data-pt="Vacas Prenhes" data-en="Pregnant Cows">Vacas Prenhes</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🔬</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">156</div>
-                    <div class="stat-label">Em Protocolo IATF</div>
+                    <div class="stat-label" data-pt="Em Protocolo IATF" data-en="In IATF Protocol">Em Protocolo IATF</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">📅</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">28</div>
-                    <div class="stat-label">Partos Previstos (30 dias)</div>
+                    <div class="stat-label" data-pt="Partos Previstos (30 dias)" data-en="Calvings Expected (30 days)">Partos Previstos (30 dias)</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">✅</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">87%</div>
-                    <div class="stat-label">Taxa de Concepção</div>
+                    <div class="stat-label" data-pt="Taxa de Concepção" data-en="Conception Rate">Taxa de Concepção</div>
                 </div>
             </div>
 
             <div class="content-card">
-                <h3>🔬 Protocolo de Inseminação Ativo</h3>
+                <h3 data-pt="Protocolo de Inseminação Ativo" data-en="Active Insemination Protocol">Protocolo de Inseminação Ativo</h3>
                 <div class="protocol-form">
                     <div class="form-group">
-                        <label>Nome do Protocolo</label>
+                        <label data-pt="Nome do Protocolo" data-en="Protocol Name">Nome do Protocolo</label>
                         <select>
-                            <option>IATF Convencional - Lote A</option>
-                            <option>IATF Ressincronização</option>
-                            <option>Protocolo Novilhas</option>
+                            <option data-pt="IATF Convencional - Lote A" data-en="Conventional IATF - Batch A">IATF Convencional - Lote A</option>
+                            <option data-pt="IATF Ressincronização" data-en="IATF Resynchronization">IATF Ressincronização</option>
+                            <option data-pt="Protocolo Novilhas" data-en="Heifer Protocol">Protocolo Novilhas</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Data Início (D0)</label>
+                        <label data-pt="Data Início (D0)" data-en="Start Date (D0)">Data Início (D0)</label>
                         <input type="date" value="2025-08-15">
                     </div>
                     <div class="form-group">
-                        <label>Número de Animais</label>
+                        <label data-pt="Número de Animais" data-en="Number of Animals">Número de Animais</label>
                         <input type="number" value="156">
                     </div>
                     <div class="form-group">
-                        <label>Touro/Sêmen</label>
+                        <label data-pt="Touro/Sêmen" data-en="Bull/Semen">Touro/Sêmen</label>
                         <select>
-                            <option>Touro Elite 001 - Angus</option>
-                            <option>Touro Premium 002 - Nelore</option>
+                            <option data-pt="Touro Elite 001 - Angus" data-en="Bull Elite 001 - Angus">Touro Elite 001 - Angus</option>
+                            <option data-pt="Touro Premium 002 - Nelore" data-en="Bull Premium 002 - Nelore">Touro Premium 002 - Nelore</option>
                         </select>
                     </div>
                 </div>
@@ -569,89 +339,100 @@
                     <div class="timeline-item">
                         <div class="timeline-marker">D0</div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Implante + Benzoato</div>
-                            <div class="timeline-desc">15/08 - Colocação do implante de P4 + 2mg Benzoato de Estradiol</div>
+                            <div class="timeline-title" data-pt="Implante + Benzoato" data-en="Implant + Benzoate">Implante + Benzoato</div>
+                            <div class="timeline-desc" data-pt="15/08 - Colocação do implante de P4 + 2mg Benzoato de Estradiol"
+                                                         data-en="Aug 15 - P4 implant placement + 2mg Estradiol Benzoate">
+                                15/08 - Colocação do implante de P4 + 2mg Benzoato de Estradiol
+                            </div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker">D8</div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Retirada + PGF + eCG</div>
-                            <div class="timeline-desc">23/08 - Retirar implante + PGF2α + 300UI eCG</div>
+                            <div class="timeline-title" data-pt="Retirada + PGF + eCG" data-en="Removal + PGF + eCG">Retirada + PGF + eCG</div>
+                            <div class="timeline-desc" data-pt="23/08 - Retirar implante + PGF2α + 300UI eCG"
+                                                         data-en="Aug 23 - Remove implant + PGF2α + 300IU eCG">
+                                23/08 - Retirar implante + PGF2α + 300UI eCG
+                            </div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker">D9</div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Benzoato de Estradiol</div>
-                            <div class="timeline-desc">24/08 - Aplicar 1mg de Benzoato</div>
+                            <div class="timeline-title" data-pt="Benzoato de Estradiol" data-en="Estradiol Benzoate">Benzoato de Estradiol</div>
+                            <div class="timeline-desc" data-pt="24/08 - Aplicar 1mg de Benzoato" data-en="Aug 24 - Apply 1mg Benzoate">
+                                24/08 - Aplicar 1mg de Benzoato
+                            </div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker">D10</div>
                         <div class="timeline-content">
-                            <div class="timeline-title">IATF</div>
-                            <div class="timeline-desc">25/08 - Inseminação Artificial em Tempo Fixo (manhã)</div>
+                            <div class="timeline-title" data-pt="IATF" data-en="Fixed-Time AI">IATF</div>
+                            <div class="timeline-desc" data-pt="25/08 - Inseminação Artificial em Tempo Fixo (manhã)"
+                                                         data-en="Aug 25 - Fixed-Time Artificial Insemination (morning)">
+                                25/08 - Inseminação Artificial em Tempo Fixo (manhã)
+                            </div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker">D40</div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Diagnóstico de Gestação</div>
-                            <div class="timeline-desc">24/09 - Ultrassonografia para confirmação</div>
+                            <div class="timeline-title" data-pt="Diagnóstico de Gestação" data-en="Pregnancy Diagnosis">Diagnóstico de Gestação</div>
+                            <div class="timeline-desc" data-pt="24/09 - Ultrassonografia para confirmação"
+                                                         data-en="Sep 24 - Ultrasound pregnancy check">
+                                24/09 - Ultrassonografia para confirmação
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="content-card">
-                <h3>📋 Animais em Reprodução</h3>
+                <h3 data-pt="Animais em Reprodução" data-en="Animals in Reproduction">Animais em Reprodução</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Brinco</th>
-                                <th>Categoria</th>
-                                <th>Status</th>
-                                <th>Protocolo</th>
-                                <th>Data IA</th>
-                                <th>Touro/Sêmen</th>
-                                <th>Previsão Parto</th>
+                                <th data-pt="Brinco" data-en="Ear Tag">Brinco</th>
+                                <th data-pt="Categoria" data-en="Category">Categoria</th>
+                                <th data-pt="Status" data-en="Status">Status</th>
+                                <th data-pt="Protocolo" data-en="Protocol">Protocolo</th>
+                                <th data-pt="Data IA" data-en="AI Date">Data IA</th>
+                                <th data-pt="Touro/Sêmen" data-en="Bull/Semen">Touro/Sêmen</th>
+                                <th data-pt="Previsão Parto" data-en="Due Date">Previsão Parto</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>#1234</td>
-                                <td>Vaca</td>
-                                <td><span class="status-badge status-pregnant">Prenhe</span></td>
-                                <td>IATF Conv.</td>
+                                <td data-pt="Vaca" data-en="Cow">Vaca</td>
+                                <td><span class="status-badge status-pregnant" data-pt="Prenhe" data-en="Pregnant">Prenhe</span></td>
+                                <td data-pt="IATF Conv." data-en="Conv. IATF">IATF Conv.</td>
                                 <td>15/05/2025</td>
                                 <td>Elite 001</td>
                                 <td>22/02/2026</td>
                             </tr>
                             <tr>
                                 <td>#1456</td>
-                                <td>Novilha</td>
-                                <td><span class="status-badge status-inseminated">Inseminada</span></td>
-                                <td>IATF Nov.</td>
+                                <td data-pt="Novilha" data-en="Heifer">Novilha</td>
+                                <td><span class="status-badge status-inseminated" data-pt="Inseminada" data-en="Inseminated">Inseminada</span></td>
+                                <td data-pt="IATF Nov." data-en="Heifer IATF">IATF Nov.</td>
                                 <td>25/08/2025</td>
                                 <td>Premium 002</td>
                                 <td>-</td>
                             </tr>
                             <tr>
                                 <td>#1789</td>
-                                <td>Vaca</td>
-                                <td><span class="status-badge status-open">Vazia</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td data-pt="Vaca" data-en="Cow">Vaca</td>
+                                <td><span class="status-badge status-open" data-pt="Vazia" data-en="Open">Vazia</span></td>
+                                <td>-</td><td>-</td><td>-</td><td>-</td>
                             </tr>
                             <tr>
                                 <td>#2001</td>
-                                <td>Vaca</td>
-                                <td><span class="status-badge status-confirmed">Confirmada</span></td>
-                                <td>IATF Ressinc.</td>
+                                <td data-pt="Vaca" data-en="Cow">Vaca</td>
+                                <td><span class="status-badge status-confirmed" data-pt="Confirmada" data-en="Confirmed">Confirmada</span></td>
+                                <td data-pt="IATF Ressinc." data-en="Resync IATF">IATF Ressinc.</td>
                                 <td>10/06/2025</td>
                                 <td>Elite 001</td>
                                 <td>17/03/2026</td>
@@ -662,37 +443,35 @@
             </div>
         </div>
 
-        <!-- Health Tab -->
+        <!-- Health -->
         <div id="health" class="tab-content">
             <div class="content-card">
-                <h3>💉 Controle Sanitário</h3>
+                <h3 data-pt="Controle Sanitário" data-en="Health Control">Controle Sanitário</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Data</th>
-                                <th>Tipo</th>
-                                <th>Produto</th>
-                                <th>Lote</th>
-                                <th>Quantidade</th>
-                                <th>Responsável</th>
+                                <th data-pt="Data" data-en="Date">Data</th>
+                                <th data-pt="Tipo" data-en="Type">Tipo</th>
+                                <th data-pt="Produto" data-en="Product">Produto</th>
+                                <th data-pt="Lote" data-en="Batch">Lote</th>
+                                <th data-pt="Quantidade" data-en="Quantity">Quantidade</th>
+                                <th data-pt="Responsável" data-en="Responsible">Responsável</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>22/08/2025</td>
-                                <td>Vacinação</td>
-                                <td>Aftosa</td>
-                                <td>Lote C</td>
-                                <td>450</td>
+                                <td data-pt="Vacinação" data-en="Vaccination">Vacinação</td>
+                                <td data-pt="Aftosa" data-en="FMD">Aftosa</td>
+                                <td>Lote C</td><td>450</td>
                                 <td>João Silva</td>
                             </tr>
                             <tr>
                                 <td>20/08/2025</td>
-                                <td>Vermifugação</td>
-                                <td>Ivermectina</td>
-                                <td>Bezerros</td>
-                                <td>280</td>
+                                <td data-pt="Vermifugação" data-en="Deworming">Vermifugação</td>
+                                <td data-pt="Ivermectina" data-en="Ivermectin">Ivermectina</td>
+                                <td>Bezerros</td><td>280</td>
                                 <td>Pedro Santos</td>
                             </tr>
                         </tbody>
@@ -701,64 +480,56 @@
             </div>
         </div>
 
-        <!-- Finances Tab -->
+        <!-- Finances -->
         <div id="finances" class="tab-content">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">💰</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">R$ 485.750</div>
-                    <div class="stat-label">Receita (Mês)</div>
+                    <div class="stat-label" data-pt="Receita (Mês)" data-en="Revenue (Month)">Receita (Mês)</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">📉</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">R$ 127.340</div>
-                    <div class="stat-label">Despesas (Mês)</div>
+                    <div class="stat-label" data-pt="Despesas (Mês)" data-en="Expenses (Month)">Despesas (Mês)</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">📊</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">R$ 358.410</div>
-                    <div class="stat-label">Lucro Líquido</div>
+                    <div class="stat-label" data-pt="Lucro Líquido" data-en="Net Profit">Lucro Líquido</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🎯</div>
+                    <div class="stat-icon"></div>
                     <div class="stat-value">R$ 198/cab</div>
-                    <div class="stat-label">Custo por Cabeça</div>
+                    <div class="stat-label" data-pt="Custo por Cabeça" data-en="Cost per Head">Custo por Cabeça</div>
                 </div>
             </div>
         </div>
 
-        <!-- Pastures Tab -->
+        <!-- Pastures -->
         <div id="pastures" class="tab-content">
             <div class="content-card">
-                <h3>🌾 Gestão de Pastagens</h3>
+                <h3 data-pt="Gestão de Pastagens" data-en="Pasture Management">Gestão de Pastagens</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Pasto</th>
-                                <th>Área (ha)</th>
-                                <th>Tipo</th>
-                                <th>Animais</th>
-                                <th>Taxa Lotação</th>
-                                <th>Último Manejo</th>
+                                <th data-pt="Pasto" data-en="Pasture">Pasto</th>
+                                <th data-pt="Área (ha)" data-en="Area (ha)">Área (ha)</th>
+                                <th data-pt="Tipo" data-en="Type">Tipo</th>
+                                <th data-pt="Animais" data-en="Animals">Animais</th>
+                                <th data-pt="Taxa Lotação" data-en="Stocking Rate">Taxa Lotação</th>
+                                <th data-pt="Último Manejo" data-en="Last Management">Último Manejo</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Pasto Norte</td>
-                                <td>450</td>
-                                <td>Brachiaria</td>
-                                <td>450</td>
-                                <td>1.0 UA/ha</td>
-                                <td>15/08/2025</td>
+                                <td data-pt="Pasto Norte" data-en="North Pasture">Pasto Norte</td>
+                                <td>450</td><td>Brachiaria</td><td>450</td><td>1.0 UA/ha</td><td>15/08/2025</td>
                             </tr>
                             <tr>
-                                <td>Pasto Sul</td>
-                                <td>380</td>
-                                <td>Mombaça</td>
-                                <td>380</td>
-                                <td>1.0 UA/ha</td>
-                                <td>10/08/2025</td>
+                                <td data-pt="Pasto Sul" data-en="South Pasture">Pasto Sul</td>
+                                <td>380</td><td>Mombaça</td><td>380</td><td>1.0 UA/ha</td><td>10/08/2025</td>
                             </tr>
                         </tbody>
                     </table>
@@ -766,41 +537,41 @@
             </div>
         </div>
 
-        <!-- Team Tab -->
+        <!-- Team -->
         <div id="team" class="tab-content">
             <div class="content-card">
-                <h3>👥 Equipe de Vaqueiros</h3>
+                <h3 data-pt="Equipe de Vaqueiros" data-en="Cowboy Team">Equipe de Vaqueiros</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome</th>
-                                <th>Função</th>
-                                <th>WhatsApp</th>
-                                <th>Área</th>
-                                <th>Atividades (Mês)</th>
+                                <th data-pt="Nome" data-en="Name">Nome</th>
+                                <th data-pt="Função" data-en="Role">Função</th>
+                                <th data-pt="WhatsApp" data-en="WhatsApp">WhatsApp</th>
+                                <th data-pt="Área" data-en="Area">Área</th>
+                                <th data-pt="Atividades (Mês)" data-en="Activities (Month)">Atividades (Mês)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>João Silva</td>
-                                <td>Capataz</td>
+                                <td data-pt="Capataz" data-en="Foreman">Capataz</td>
                                 <td>+55 67 99999-1234</td>
-                                <td>Geral</td>
+                                <td data-pt="Geral" data-en="General">Geral</td>
                                 <td>127</td>
                             </tr>
                             <tr>
                                 <td>Pedro Santos</td>
-                                <td>Vaqueiro</td>
+                                <td data-pt="Vaqueiro" data-en="Cowboy">Vaqueiro</td>
                                 <td>+55 67 99999-5678</td>
-                                <td>Pasto Norte</td>
+                                <td data-pt="Pasto Norte" data-en="North Pasture">Pasto Norte</td>
                                 <td>89</td>
                             </tr>
                             <tr>
                                 <td>Carlos Oliveira</td>
-                                <td>Vaqueiro</td>
+                                <td data-pt="Vaqueiro" data-en="Cowboy">Vaqueiro</td>
                                 <td>+55 67 99999-9012</td>
-                                <td>Pasto Sul</td>
+                                <td data-pt="Pasto Sul" data-en="South Pasture">Pasto Sul</td>
                                 <td>76</td>
                             </tr>
                         </tbody>
@@ -811,40 +582,59 @@
     </div>
 
     <script>
+        // Language System
+        let currentLang = localStorage.getItem('zapDashboardLang') || 'pt';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-pt],[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + lang);
+                if (text !== null) el.innerHTML = text;
+            });
+            document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            localStorage.setItem('zapDashboardLang', lang);
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
+        });
+
+        // Load saved language
+        switchLanguage(currentLang);
+
+        // Original functions
         function showTab(tabName) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Remove active class from all tab buttons
-            const tabButtons = document.querySelectorAll('.tab');
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected tab
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked button
             event.target.classList.add('active');
         }
 
         function downloadCSV() {
-            alert('Preparando download do inventário em formato CSV...\nEsta funcionalidade será implementada na versão completa.');
+            alert(currentLang === 'pt' 
+                ? 'Preparando download do inventário em formato CSV...\nEsta funcionalidade será implementada na versão completa.'
+                : 'Preparing inventory CSV download...\nThis feature will be available in the full version.');
         }
-
         function downloadPDF() {
-            alert('Preparando relatório em PDF...\nEsta funcionalidade será implementada na versão completa.');
+            alert(currentLang === 'pt'
+                ? 'Preparando relatório em PDF...\nEsta funcionalidade será implementada na versão completa.'
+                : 'Preparing PDF report...\nThis feature will be available in the full version.');
         }
-
         function openProtocolModal() {
-            alert('Abrindo formulário para novo protocolo IATF...\nEsta funcionalidade será implementada na versão completa.');
+            alert(currentLang === 'pt'
+                ? 'Abrindo formulário para novo protocolo IATF...\nEsta funcionalidade será implementada na versão completa.'
+                : 'Opening new IATF protocol form...\nThis feature will be available in the full version.');
         }
 
         // Simulate real-time updates
         setInterval(() => {
-            const activities = document.querySelector('#overview .stat-value');
-            if (activities) {
-                const current = parseInt(activities.textContent.replace('.', ''));
-                activities.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString('pt-BR');
+            const el = document.querySelector('#overview .stat-value');
+            if (el) {
+                const current = parseInt(el.textContent.replace(/[.,]/g, ''));
+                el.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString('pt-BR');
             }
         }, 5000);
     </script>
